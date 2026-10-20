@@ -20,26 +20,29 @@ npm run start
 
 ## Before you deploy
 
-1. **CV file** — add your actual resume at `public/cv-wiem-arfaoui.pdf`. The "Download CV" button and the command palette both link to that path.
-2. **Real links** — update `data/nav.ts` with your real email, LinkedIn and GitHub URLs (currently placeholders).
-3. **Domain** — `app/layout.tsx`, `app/sitemap.ts` and `app/robots.ts` reference `https://wiemarfaoui.dev`. Swap in your real domain once deployed.
-4. **Contact form** — `app/api/contact/route.ts` currently logs submissions to the server console. Wire it up to an email provider (e.g. Resend, SendGrid) or a database before going live.
-5. **Project links** — `data/projects.ts` has placeholder `github`/`demo` URLs for each project; point them at your real repos and live demos.
-6. **Fonts** — the build fetches Space Grotesk, Inter and JetBrains Mono from Google Fonts at build time via `next/font/google`. This requires outbound internet access during `npm run build` / `npm run dev`. If you're building behind a firewall that blocks `fonts.googleapis.com`, switch to `next/font/local` with self-hosted font files.
+1. **Site URL** — set `NEXT_PUBLIC_SITE_URL` (e.g. `https://your-domain.com`) in your hosting environment. It feeds the metadata, sitemap and robots.txt.
+2. **LinkedIn / CV** — in `data/nav.ts`, set `socials.linkedin` and/or `socials.cv` (put the PDF in `public/`). Until then, the corresponding buttons are hidden. Your CV is intentionally *not* in the repository.
+3. **Project links** — `data/projects.ts` points every project to your GitHub profile; replace with the exact repository URLs (and add `demo` links when available).
+4. **Contact form** — it opens the visitor's mail client (`mailto:`); there is no backend to maintain.
+5. **GitHub section** — repositories are fetched live from the public GitHub API (cached 1h). If the API is unreachable, the section falls back to a link to your profile.
+6. **Fonts** — Space Grotesk, Inter and JetBrains Mono are self-hosted through `@fontsource`, so builds work offline.
+
+## Scripts
+
+`npm run dev` · `npm run build` · `npm run lint` · `npm run typecheck`
 
 ## Project structure
 
 ```
 app/                  Routes (home, project detail pages, API, SEO files)
   projects/[slug]/    Dynamic project detail pages
-  api/contact/        Contact form submission endpoint
 components/
   layout/             Navbar, Footer
   sections/           Hero, About, Skills, Projects, Experience, GitHub, Contact
   projects/           ProjectCard
   ui/                 Loader, CustomCursor, CommandPalette, ScrollProgress,
                        BackToTop, ThemeToggle, MagneticButton, SectionHeading, BrandIcons
-data/                 Content: projects.ts, skills.ts, experience.ts, nav.ts
+data/                 Content: projects, skills, experience, certifications, nav
 hooks/                useMousePosition, useScrollProgress
 lib/                  cn() className helper
 types/                Shared TypeScript interfaces

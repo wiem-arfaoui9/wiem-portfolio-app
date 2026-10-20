@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft, ArrowUpRight, Layers, Target, Sparkles, TrendingUp } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Layers, ListChecks, Sparkles } from "lucide-react";
 import { GithubIcon } from "@/components/ui/BrandIcons";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
@@ -51,8 +51,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
                 Flagship Project
               </span>
             )}
-            <span className="font-mono text-xs text-ink-muted">{project.year}</span>
-            <span className="font-mono text-xs text-ink-muted">·</span>
+            <span className="rounded-full border border-border-subtle px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-cyan">
+              {project.status}
+            </span>
             <span className="font-mono text-xs text-ink-muted">{project.role}</span>
           </div>
 
@@ -121,7 +122,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <section className="mt-14">
             <div className="mb-6 flex items-center gap-2 text-violet-soft">
               <Sparkles size={18} />
-              <h2 className="font-mono text-xs uppercase tracking-[0.3em]">Features</h2>
+              <h2 className="font-mono text-xs uppercase tracking-[0.3em]">{project.featuresLabel}</h2>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               {project.features.map((f) => (
@@ -132,37 +133,23 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             </div>
           </section>
 
-          {/* Challenges */}
-          <section className="mt-14">
-            <div className="mb-6 flex items-center gap-2 text-violet-soft">
-              <Target size={18} />
-              <h2 className="font-mono text-xs uppercase tracking-[0.3em]">Challenges &amp; Solutions</h2>
-            </div>
-            <div className="flex flex-col gap-4">
-              {project.challenges.map((c) => (
-                <div key={c.title} className="glass rounded-xl p-5">
-                  <p className="font-display text-base text-ink">{c.title}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-ink-muted">{c.detail}</p>
-                </div>
-              ))}
-            </div>
-          </section>
-
-          {/* Results */}
-          <section className="mt-14">
-            <div className="mb-6 flex items-center gap-2 text-violet-soft">
-              <TrendingUp size={18} />
-              <h2 className="font-mono text-xs uppercase tracking-[0.3em]">Results</h2>
-            </div>
-            <ul className="flex flex-col gap-3">
-              {project.results.map((r) => (
-                <li key={r} className="flex items-start gap-3 text-sm text-ink-muted">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan" />
-                  {r}
-                </li>
-              ))}
-            </ul>
-          </section>
+          {/* Progress */}
+          {project.progress.length > 0 && (
+            <section className="mt-14">
+              <div className="mb-6 flex items-center gap-2 text-violet-soft">
+                <ListChecks size={18} />
+                <h2 className="font-mono text-xs uppercase tracking-[0.3em]">Where it stands</h2>
+              </div>
+              <ul className="flex flex-col gap-3">
+                {project.progress.map((r) => (
+                  <li key={r} className="flex items-start gap-3 text-sm text-ink-muted">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan" />
+                    {r}
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
         </div>
 
         <div className="mx-auto mt-24 max-w-6xl">

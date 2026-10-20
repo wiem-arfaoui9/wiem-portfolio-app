@@ -10,8 +10,8 @@ export default function Experience() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="04 · Experience"
-          title="How the work evolved."
-          description="From first algorithms to a gamified LMS in production — each step built on the last."
+          title="Internships, projects, studies."
+          description="A timeline of my internships and personal projects."
         />
 
         <ol className="relative mt-16 border-l border-border-subtle pl-8 md:pl-10">

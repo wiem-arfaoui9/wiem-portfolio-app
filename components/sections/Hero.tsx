@@ -5,8 +5,9 @@ import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { ArrowDown, ArrowUpRight, FileDown, Mail } from "lucide-react";
 import MagneticButton from "@/components/ui/MagneticButton";
 import ArchitectureDiagram from "./ArchitectureDiagram";
+import { socials } from "@/data/nav";
 
-const stack = ["Laravel", "Next.js", "React", "TypeScript", "Docker", "DevSecOps"];
+const stack = ["Java", "Spring Boot", "Angular", "Laravel", "Next.js", "React"];
 
 export default function Hero() {
   const ref = useRef<HTMLDivElement>(null);
@@ -58,7 +59,7 @@ export default function Hero() {
             className="glass mb-7 inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-mono text-xs text-ink-muted"
           >
             <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-amber" />
-            Open to alternance — 2025/2026
+            Looking for a PFE internship — 2026/2027
           </motion.div>
 
           <h1 className="font-display text-4xl font-medium leading-[1.08] text-ink sm:text-5xl md:text-6xl lg:text-[4rem]">
@@ -81,9 +82,9 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="mt-6 max-w-xl text-base text-ink-muted md:text-lg"
           >
-            I&apos;m <span className="text-ink">Wiem Arfaoui</span>, a Full Stack Developer and Computer
-            Science student at ISET Zaghouan. I design and ship real applications — from gamified
-            learning platforms to automated security pipelines.
+            I&apos;m <span className="text-ink">Wiem Arfaoui</span>, a third-year Computer Science student at
+            ISET Zaghouan. I built a Spring Boot and Angular application during my internship at SIGA,
+            and I&apos;m developing Minassa, an education platform, with Next.js and Laravel.
           </motion.p>
 
           <motion.div
@@ -95,9 +96,11 @@ export default function Hero() {
             <MagneticButton href="#projects" className="bg-ink text-bg hover:opacity-90">
               View Projects <ArrowUpRight size={15} />
             </MagneticButton>
-            <MagneticButton href="/cv-wiem-arfaoui.pdf" target="_blank" className="glass text-ink hover:bg-white/5">
-              <FileDown size={15} /> Download CV
-            </MagneticButton>
+            {socials.cv && (
+              <MagneticButton href={socials.cv} target="_blank" className="glass text-ink hover:bg-white/5">
+                <FileDown size={15} /> Download CV
+              </MagneticButton>
+            )}
             <MagneticButton href="#contact" className="text-ink hover:text-violet-soft">
               <Mail size={15} /> Contact Me
             </MagneticButton>

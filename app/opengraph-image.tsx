@@ -36,7 +36,7 @@ export default async function OGImage() {
           >
             WA
           </div>
-          <span style={{ fontSize: 24, color: "#9497ac" }}>wiemarfaoui.dev</span>
+          <span style={{ fontSize: 24, color: "#9497ac" }}>ISET Zaghouan · Tunisia</span>
         </div>
         <div style={{ display: "flex", fontSize: 68, fontWeight: 600, marginTop: 40, lineHeight: 1.15 }}>
           Wiem Arfaoui
@@ -45,7 +45,7 @@ export default async function OGImage() {
           Full Stack Developer
         </div>
         <div style={{ display: "flex", fontSize: 24, color: "#9497ac", marginTop: 28, maxWidth: 800 }}>
-          Building modern digital experiences with code — Next.js, Laravel, DevSecOps.
+          Spring Boot · Angular · Laravel · Next.js — looking for a PFE internship 2026/2027.
         </div>
       </div>
     ),

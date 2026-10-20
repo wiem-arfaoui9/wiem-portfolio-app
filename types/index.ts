@@ -1,9 +1,10 @@
-export type SkillCategory = "Frontend" | "Backend" | "Programming" | "DevOps" | "Tools";
+export type SkillCategory = "Backend" | "Frontend" | "API" | "Databases" | "Tools";
 
 export interface Skill {
   name: string;
   category: SkillCategory;
-  level: number; // 0-100, used for the ecosystem visualization
+  /** Where this skill was actually used (shown on the card). */
+  usedIn?: string;
 }
 
 export interface ArchitectureStep {
@@ -11,21 +12,25 @@ export interface ArchitectureStep {
   detail: string;
 }
 
+export type ProjectStatus = "In progress" | "Early stage" | "Personal lab";
+
 export interface Project {
   slug: string;
   flagship?: boolean;
   name: string;
   tagline: string;
   description: string;
+  status: ProjectStatus;
   architecture: ArchitectureStep[];
+  /** Label above the feature list, e.g. "Features" or "Planned features". */
+  featuresLabel: string;
   features: string[];
   technologies: string[];
-  challenges: { title: string; detail: string }[];
-  results: string[];
+  /** Honest "what is done so far" list. */
+  progress: string[];
   github?: string;
   demo?: string;
   accent: "violet" | "cyan" | "amber";
-  year: string;
   role: string;
 }
 
@@ -35,10 +40,17 @@ export interface TimelineItem {
   place: string;
   description: string;
   tags: string[];
+  kind: "work" | "project" | "education";
+}
+
+export interface Certification {
+  title: string;
+  issuer: string;
+  date?: string;
+  detail?: string;
 }
 
 export interface NavLink {
   label: string;
   href: string;
-  command?: string;
 }

@@ -9,38 +9,31 @@ import MagneticButton from "@/components/ui/MagneticButton";
 import { socials } from "@/data/nav";
 
 export default function Contact() {
-  const [sent, setSent] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [opened, setOpened] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  // No backend: the form prepares an email in the visitor's own mail client.
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
-    const form = new FormData(e.currentTarget);
-    try {
-      await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(Object.fromEntries(form)),
-      });
-    } catch {
-      // Contact route is a stub for now — the UI still confirms locally.
-    } finally {
-      setLoading(false);
-      setSent(true);
-    }
+    const f = new FormData(e.currentTarget);
+    const subject = encodeURIComponent(String(f.get("subject") ?? ""));
+    const body = encodeURIComponent(`${f.get("message") ?? ""}\n\n— ${f.get("name") ?? ""} (${f.get("email") ?? ""})`);
+    window.location.href = `mailto:${socials.email}?subject=${subject}&body=${body}`;
+    setOpened(true);
   };
 
   return (
     <section id="contact" className="relative px-6 py-28">
       <div className="mx-auto max-w-6xl">
-        <SectionHeading eyebrow="06 · Contact" title="Let's build something real." align="center" />
+        <SectionHeading eyebrow="07 · Contact" title="Let's build something real." align="center" />
 
         <div className="mx-auto mt-14 grid max-w-4xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="flex flex-col gap-4">
             {[
               { icon: Mail, label: "Email", value: socials.email, href: `mailto:${socials.email}` },
-              { icon: LinkedinIcon, label: "LinkedIn", value: "/in/wiemarfaoui", href: socials.linkedin },
-              { icon: GithubIcon, label: "GitHub", value: "/wiemarfaoui", href: socials.github },
+              ...(socials.linkedin
+                ? [{ icon: LinkedinIcon, label: "LinkedIn", value: "LinkedIn profile", href: socials.linkedin }]
+                : []),
+              { icon: GithubIcon, label: "GitHub", value: `/${socials.githubUser}`, href: socials.github },
             ].map((c, i) => (
               <motion.a
                 key={c.label}
@@ -72,11 +65,11 @@ export default function Contact() {
             transition={{ duration: 0.6 }}
             className="glass rounded-2xl p-6 md:p-8"
           >
-            {sent ? (
+            {opened ? (
               <div className="flex h-full min-h-[280px] flex-col items-center justify-center gap-3 text-center">
                 <CheckCircle2 className="text-cyan" size={36} />
-                <p className="font-display text-lg text-ink">Message received.</p>
-                <p className="text-sm text-ink-muted">I&apos;ll get back to you as soon as possible.</p>
+                <p className="font-display text-lg text-ink">Your email app should open.</p>
+                <p className="text-sm text-ink-muted">If nothing opens, write to me directly at the address on the left.</p>
               </div>
             ) : (
               <div className="grid gap-4">
@@ -109,11 +102,7 @@ export default function Contact() {
                   className="glass resize-none rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
                 />
                 <MagneticButton className="justify-center bg-ink text-bg hover:opacity-90">
-                  {loading ? "Sending…" : (
-                    <>
-                      Send message <Send size={14} />
-                    </>
-                  )}
+                  Write me an email <Send size={14} />
                 </MagneticButton>
               </div>
             )}

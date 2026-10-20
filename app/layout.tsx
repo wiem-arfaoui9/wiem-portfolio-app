@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { Space_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
+import "@fontsource-variable/space-grotesk";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
 import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import CustomCursor from "@/components/ui/CustomCursor";
@@ -8,25 +10,7 @@ import BackToTop from "@/components/ui/BackToTop";
 import CommandPalette from "@/components/ui/CommandPalette";
 import Loader from "@/components/ui/Loader";
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-space-grotesk",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-jetbrains",
-  display: "swap",
-});
-
-const siteUrl = "https://wiemarfaoui.dev";
+import { siteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -35,16 +19,17 @@ export const metadata: Metadata = {
     template: "%s — Wiem Arfaoui",
   },
   description:
-    "Portfolio of Wiem Arfaoui, a Full Stack Developer and Computer Science student at ISET Zaghouan, building gamified learning platforms, secure pipelines and modern web apps. Open to alternance opportunities.",
+    "Portfolio of Wiem Arfaoui, third-year Computer Science student at ISET Zaghouan. Java, Spring Boot, Angular, Laravel, React and Next.js. Looking for a full-stack PFE internship for 2026/2027.",
   keywords: [
     "Wiem Arfaoui",
     "Full Stack Developer",
-    "Next.js Developer",
-    "Laravel Developer",
-    "DevSecOps",
+    "Spring Boot",
+    "Angular",
+    "Laravel",
+    "Next.js",
     "ISET Zaghouan",
-    "Alternance",
-    "Tunisia developer portfolio",
+    "Stage PFE 2026",
+    "Tunisia",
   ],
   authors: [{ name: "Wiem Arfaoui" }],
   creator: "Wiem Arfaoui",
@@ -53,7 +38,7 @@ export const metadata: Metadata = {
     url: siteUrl,
     title: "Wiem Arfaoui — Full Stack Developer",
     description:
-      "Building modern digital experiences with code. Full Stack Developer specializing in Next.js, Laravel and DevSecOps — open to alternance opportunities.",
+      "Building modern digital experiences with code. Computer Science student looking for a full-stack PFE internship (2026/2027).",
     siteName: "Wiem Arfaoui",
     images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Wiem Arfaoui — Full Stack Developer" }],
   },
@@ -69,7 +54,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" data-theme="dark" suppressHydrationWarning>
-      <body className={`${spaceGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} cursor-none-desktop antialiased`}>
+      <body className={`cursor-none-desktop antialiased`}>
         <ThemeProvider>
           <Loader />
           <ScrollProgress />

@@ -7,23 +7,23 @@ import SectionHeading from "@/components/ui/SectionHeading";
 const pillars = [
   {
     icon: GraduationCap,
-    title: "Computer Science Student",
-    text: "Currently studying at ISET Zaghouan, Tunisia — building a solid foundation in algorithms, systems and software engineering.",
+    title: "Computer Science student",
+    text: "Third year of the Licence en Technologie de l'Informatique (DSI) at ISET Zaghouan, Tunisia.",
   },
   {
     icon: Code2,
-    title: "Full Stack Specialist",
-    text: "Comfortable across the whole stack: Laravel and REST APIs on the backend, Next.js and React on the frontend.",
+    title: "Full-stack in practice",
+    text: "Spring Boot and Angular during my SIGA internship; Laravel, React and Next.js in my personal projects.",
   },
   {
     icon: Cpu,
-    title: "DevOps Curious",
-    text: "I like understanding what happens after 'git push' — CI/CD, containers and automated security pipelines included.",
+    title: "AI & security curiosity",
+    text: "NVIDIA Fundamentals of Deep Learning certificate, and an active member of the SecuriNets cybersecurity club.",
   },
   {
     icon: Sparkles,
-    title: "Driven by Real Projects",
-    text: "I learn fastest by shipping. Every project here is a real, working application — not a tutorial clone.",
+    title: "Team & community",
+    text: "Webmaster of the IEEE club at ISET Zaghouan, and IEEE Student Member. I enjoy contributing to concrete projects in a team.",
   },
 ];
 
@@ -33,8 +33,8 @@ export default function About() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="01 · About"
-          title="A developer who ships, not just studies."
-          description="Passionate about turning ideas into working software — with a growing interest in DevOps and AI along the way."
+          title="A student developer who builds."
+          description="Looking for a PFE internship (2026/2027) in full-stack software development, where I can contribute to real projects as part of a team."
         />
 
         <div className="mt-16 grid gap-5 sm:grid-cols-2">

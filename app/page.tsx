@@ -7,8 +7,12 @@ import Projects from "@/components/sections/Projects";
 import Experience from "@/components/sections/Experience";
 import GitHubSection from "@/components/sections/GitHubSection";
 import Contact from "@/components/sections/Contact";
+import Certifications from "@/components/sections/Certifications";
+import { getGithubRepos } from "@/lib/github";
 
-export default function Home() {
+export default async function Home() {
+  const repos = await getGithubRepos();
+
   return (
     <>
       <Navbar />
@@ -18,7 +22,8 @@ export default function Home() {
         <Skills />
         <Projects />
         <Experience />
-        <GitHubSection />
+        <Certifications />
+        <GitHubSection repos={repos} />
         <Contact />
       </main>
       <Footer />

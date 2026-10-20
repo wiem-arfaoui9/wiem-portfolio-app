@@ -9,9 +9,10 @@ export default function Projects() {
   const [filter, setFilter] = useState("All");
 
   const filters = useMemo(() => {
-    const set = new Set<string>();
-    projects.forEach((p) => p.technologies.forEach((t) => set.add(t)));
-    return ["All", "Next.js", "Laravel", "Docker", ...Array.from(set).filter((t) => !["Next.js", "Laravel", "Docker"].includes(t)).slice(0, 3)];
+    const counts = new Map<string, number>();
+    projects.forEach((p) => p.technologies.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
+    const shared = [...counts.entries()].filter(([, n]) => n > 1).sort((x, y) => y[1] - x[1]).map(([t]) => t);
+    return ["All", ...shared];
   }, []);
 
   const filtered = filter === "All" ? projects : projects.filter((p) => p.technologies.includes(filter));
@@ -22,8 +23,8 @@ export default function Projects() {
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
           <SectionHeading
             eyebrow="03 · Selected Work"
-            title="Real applications, real architecture."
-            description="Three projects that shaped how I build software — from gamified learning to automated security."
+            title="Projects, with their real status."
+            description="Personal projects built on Laravel, React and Next.js, plus a security-pipeline lab. Each card shows its real status."
           />
         </div>
 

@@ -82,20 +82,28 @@ export default function CommandPalette() {
       icon: <GithubIcon size={14} />,
       action: () => window.open(socials.github, "_blank"),
     },
-    {
-      id: "linkedin",
-      label: "Open LinkedIn profile",
-      hint: "Link",
-      icon: <LinkedinIcon size={14} />,
-      action: () => window.open(socials.linkedin, "_blank"),
-    },
-    {
-      id: "cv",
-      label: "Download CV",
-      hint: "Resume",
-      icon: <FileText size={14} />,
-      action: () => window.open("/cv-wiem-arfaoui.pdf", "_blank"),
-    },
+    ...(socials.linkedin
+      ? [
+          {
+            id: "linkedin",
+            label: "Open LinkedIn profile",
+            hint: "Link",
+            icon: <LinkedinIcon size={14} />,
+            action: () => window.open(socials.linkedin, "_blank"),
+          },
+        ]
+      : []),
+    ...(socials.cv
+      ? [
+          {
+            id: "cv",
+            label: "Download CV",
+            hint: "Resume",
+            icon: <FileText size={14} />,
+            action: () => window.open(socials.cv, "_blank"),
+          },
+        ]
+      : []),
   ];
 
   const filtered = items.filter((i) => i.label.toLowerCase().includes(query.toLowerCase()));

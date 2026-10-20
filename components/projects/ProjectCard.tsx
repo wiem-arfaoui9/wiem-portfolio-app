@@ -31,6 +31,9 @@ export default function ProjectCard({ project, index }: { project: Project; inde
             <span className="relative font-display text-4xl font-medium text-ink/90 md:text-5xl">
               {project.name}
             </span>
+            <span className="absolute right-4 top-4 rounded-full border border-border-subtle bg-bg/60 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-ink-muted backdrop-blur">
+              {project.status}
+            </span>
             {project.flagship && (
               <span className="absolute left-4 top-4 rounded-full bg-amber/15 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber">
                 Flagship

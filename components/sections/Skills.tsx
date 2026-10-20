@@ -6,7 +6,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import { skills, skillCategories } from "@/data/skills";
 
 export default function Skills() {
-  const [active, setActive] = useState<(typeof skillCategories)[number]>("Frontend");
+  const [active, setActive] = useState<(typeof skillCategories)[number]>("Backend");
   const filtered = skills.filter((s) => s.category === active);
 
   return (
@@ -14,8 +14,8 @@ export default function Skills() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="02 · Skills"
-          title="A technology ecosystem, not a checklist."
-          description="Each skill is used across real projects below — not just listed. Filter by category to explore."
+          title="What I work with, and where."
+          description="Each skill shows where I actually used it: internship or personal project."
         />
 
         <div className="mt-12 flex flex-wrap gap-2">
@@ -25,9 +25,7 @@ export default function Skills() {
               onClick={() => setActive(cat)}
               data-cursor="pointer"
               className={`rounded-full px-4 py-2 font-mono text-xs uppercase tracking-wider transition-all ${
-                active === cat
-                  ? "bg-ink text-bg"
-                  : "glass text-ink-muted hover:text-ink"
+                active === cat ? "bg-ink text-bg" : "glass text-ink-muted hover:text-ink"
               }`}
             >
               {cat}
@@ -47,19 +45,12 @@ export default function Skills() {
                 transition={{ duration: 0.35, delay: i * 0.04 }}
                 className="glass rounded-xl p-5"
               >
-                <div className="flex items-center justify-between">
-                  <span className="font-display text-base text-ink">{skill.name}</span>
-                  <span className="font-mono text-xs text-ink-muted">{skill.level}%</span>
-                </div>
-                <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-white/5">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${skill.level}%` }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: i * 0.05, ease: "easeOut" }}
-                    className="h-full rounded-full bg-gradient-to-r from-violet to-cyan"
-                  />
-                </div>
+                <span className="font-display text-lg text-ink">{skill.name}</span>
+                {skill.usedIn && (
+                  <p className="mt-2 font-mono text-xs text-ink-muted">
+                    <span className="text-cyan">↳</span> {skill.usedIn}
+                  </p>
+                )}
               </motion.div>
             ))}
           </AnimatePresence>

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { projects } from "@/data/projects";
 
-const siteUrl = "https://wiemarfaoui.dev";
+import { siteUrl } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
