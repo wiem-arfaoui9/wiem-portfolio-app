@@ -69,13 +69,13 @@ export default function Navbar() {
               className="hidden bg-ink text-bg hover:opacity-90 md:inline-flex"
             >
               <Terminal size={14} />
-              Hire me
+              Me contacter
             </MagneticButton>
             <button
               data-cursor="pointer"
               onClick={() => setMenuOpen(true)}
               className="glass flex h-9 w-9 items-center justify-center rounded-full text-ink md:hidden"
-              aria-label="Open menu"
+              aria-label="Ouvrir le menu"
             >
               <Menu size={16} />
             </button>
@@ -96,7 +96,7 @@ export default function Navbar() {
               <button
                 onClick={() => setMenuOpen(false)}
                 className="glass flex h-9 w-9 items-center justify-center rounded-full text-ink"
-                aria-label="Close menu"
+                aria-label="Fermer le menu"
               >
                 <X size={16} />
               </button>

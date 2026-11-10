@@ -24,14 +24,14 @@ export default function Contact() {
   return (
     <section id="contact" className="relative px-6 py-28">
       <div className="mx-auto max-w-6xl">
-        <SectionHeading eyebrow="07 · Contact" title="Let's build something real." align="center" />
+        <SectionHeading eyebrow="07 · Contact" title="Me contacter." align="center" />
 
         <div className="mx-auto mt-14 grid max-w-4xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="flex flex-col gap-4">
             {[
               { icon: Mail, label: "Email", value: socials.email, href: `mailto:${socials.email}` },
               ...(socials.linkedin
-                ? [{ icon: LinkedinIcon, label: "LinkedIn", value: "LinkedIn profile", href: socials.linkedin }]
+                ? [{ icon: LinkedinIcon, label: "LinkedIn", value: "Profil LinkedIn", href: socials.linkedin }]
                 : []),
               { icon: GithubIcon, label: "GitHub", value: `/${socials.githubUser}`, href: socials.github },
             ].map((c, i) => (
@@ -68,8 +68,8 @@ export default function Contact() {
             {opened ? (
               <div className="flex h-full min-h-[280px] flex-col items-center justify-center gap-3 text-center">
                 <CheckCircle2 className="text-cyan" size={36} />
-                <p className="font-display text-lg text-ink">Your email app should open.</p>
-                <p className="text-sm text-ink-muted">If nothing opens, write to me directly at the address on the left.</p>
+                <p className="font-display text-lg text-ink">Votre application mail devrait s&apos;ouvrir.</p>
+                <p className="text-sm text-ink-muted">Sinon, écrivez-moi directement à l&apos;adresse indiquée à gauche.</p>
               </div>
             ) : (
               <div className="grid gap-4">
@@ -77,32 +77,32 @@ export default function Contact() {
                   <input
                     required
                     name="name"
-                    placeholder="Your name"
+                    placeholder="Votre nom"
                     className="glass rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
                   />
                   <input
                     required
                     type="email"
                     name="email"
-                    placeholder="Your email"
+                    placeholder="Votre email"
                     className="glass rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
                   />
                 </div>
                 <input
                   required
                   name="subject"
-                  placeholder="Subject"
+                  placeholder="Objet"
                   className="glass rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
                 />
                 <textarea
                   required
                   name="message"
                   rows={5}
-                  placeholder="Tell me about the opportunity…"
+                  placeholder="Votre message…"
                   className="glass resize-none rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
                 />
                 <MagneticButton className="justify-center bg-ink text-bg hover:opacity-90">
-                  Write me an email <Send size={14} />
+                  M&apos;écrire par email <Send size={14} />
                 </MagneticButton>
               </div>
             )}

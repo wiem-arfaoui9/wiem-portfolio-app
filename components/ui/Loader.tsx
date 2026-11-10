@@ -57,7 +57,7 @@ export default function Loader() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
             >
-              booting systems<span className="text-violet">.</span>
+              Portfolio<span className="text-violet">.</span>
             </motion.h1>
             <div className="h-px w-64 overflow-hidden bg-border-subtle">
               <motion.div

@@ -28,7 +28,7 @@ export default function Hero() {
     my.set((e.clientY - rect.top) / rect.height);
   };
 
-  const title = "Building modern digital experiences with code.".split(" ");
+  const title = "Étudiante en informatique, je développe des applications web full-stack.".split(" ");
 
   return (
     <section
@@ -59,7 +59,7 @@ export default function Hero() {
             className="glass mb-7 inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-mono text-xs text-ink-muted"
           >
             <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-amber" />
-            Looking for a PFE internship — 2026/2027
+            Recherche un stage de PFE — 2026/2027
           </motion.div>
 
           <h1 className="font-display text-4xl font-medium leading-[1.08] text-ink sm:text-5xl md:text-6xl lg:text-[4rem]">
@@ -69,7 +69,7 @@ export default function Hero() {
                 initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
                 transition={{ duration: 0.6, delay: 0.15 + i * 0.06 }}
-                className={`inline-block ${["modern", "code."].includes(word) ? "text-gradient" : ""}`}
+                className={`inline-block ${["full-stack."].includes(word) ? "text-gradient" : ""}`}
               >
                 {word}&nbsp;
               </motion.span>
@@ -82,9 +82,9 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.7 }}
             className="mt-6 max-w-xl text-base text-ink-muted md:text-lg"
           >
-            I&apos;m <span className="text-ink">Wiem Arfaoui</span>, a third-year Computer Science student at
-            ISET Zaghouan. I built a Spring Boot and Angular application during my internship at SIGA,
-            and I&apos;m developing Minassa, an education platform, with Next.js and Laravel.
+            Je m&apos;appelle <span className="text-ink">Wiem Arfaoui</span>, en 3e année de licence à l&apos;ISET
+            Zaghouan. J&apos;ai participé au développement d&apos;une application de gestion pendant mon stage chez
+            SIGA (Spring Boot, Angular) et je développe deux projets personnels : Minassa et SmartDent.
           </motion.p>
 
           <motion.div
@@ -94,15 +94,15 @@ export default function Hero() {
             className="mt-8 flex flex-wrap items-center gap-3"
           >
             <MagneticButton href="#projects" className="bg-ink text-bg hover:opacity-90">
-              View Projects <ArrowUpRight size={15} />
+              Voir les projets <ArrowUpRight size={15} />
             </MagneticButton>
             {socials.cv && (
               <MagneticButton href={socials.cv} target="_blank" className="glass text-ink hover:bg-white/5">
-                <FileDown size={15} /> Download CV
+                <FileDown size={15} /> Télécharger le CV
               </MagneticButton>
             )}
             <MagneticButton href="#contact" className="text-ink hover:text-violet-soft">
-              <Mail size={15} /> Contact Me
+              <Mail size={15} /> Me contacter
             </MagneticButton>
           </motion.div>
 
@@ -138,9 +138,9 @@ export default function Hero() {
         animate={{ y: [0, 8, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-ink-muted"
-        aria-label="Scroll to about section"
+        aria-label="Aller à la section À propos"
       >
-        <span className="font-mono text-[10px] uppercase tracking-widest">Scroll</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest">Défiler</span>
         <ArrowDown size={14} />
       </motion.a>
     </section>

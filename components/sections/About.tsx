@@ -7,23 +7,23 @@ import SectionHeading from "@/components/ui/SectionHeading";
 const pillars = [
   {
     icon: GraduationCap,
-    title: "Computer Science student",
-    text: "Third year of the Licence en Technologie de l'Informatique (DSI) at ISET Zaghouan, Tunisia.",
+    title: "Étudiante en informatique",
+    text: "3e année de la Licence en Technologie de l'Informatique (DSI) à l'ISET Zaghouan, en Tunisie.",
   },
   {
     icon: Code2,
-    title: "Full-stack in practice",
-    text: "Spring Boot and Angular during my SIGA internship; Laravel, React and Next.js in my personal projects.",
+    title: "Du backend au frontend",
+    text: "Spring Boot et Angular pendant mon stage chez SIGA ; Laravel, React et Next.js dans mes projets personnels.",
   },
   {
     icon: Cpu,
-    title: "AI & security curiosity",
-    text: "NVIDIA Fundamentals of Deep Learning certificate, and an active member of the SecuriNets cybersecurity club.",
+    title: "IA et cybersécurité",
+    text: "Certificat NVIDIA Fundamentals of Deep Learning, et membre actif du club de cybersécurité SecuriNets.",
   },
   {
     icon: Sparkles,
-    title: "Team & community",
-    text: "Webmaster of the IEEE club at ISET Zaghouan, and IEEE Student Member. I enjoy contributing to concrete projects in a team.",
+    title: "Vie associative",
+    text: "Webmaster du club IEEE de l'ISET Zaghouan et membre étudiant IEEE. J'aime contribuer à des projets concrets en équipe.",
   },
 ];
 
@@ -32,9 +32,9 @@ export default function About() {
     <section id="about" className="relative px-6 py-28">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="01 · About"
-          title="A student developer who builds."
-          description="Looking for a PFE internship (2026/2027) in full-stack software development, where I can contribute to real projects as part of a team."
+          eyebrow="01 · À propos"
+          title="Étudiante développeuse."
+          description="Je cherche un stage de PFE (2026/2027) en développement full-stack, pour contribuer à des projets concrets au sein d'une équipe."
         />
 
         <div className="mt-16 grid gap-5 sm:grid-cols-2">

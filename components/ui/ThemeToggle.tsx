@@ -10,7 +10,7 @@ export default function ThemeToggle() {
     <button
       data-cursor="pointer"
       onClick={toggleTheme}
-      aria-label="Toggle theme"
+      aria-label="Changer de thème"
       className="glass flex h-9 w-9 items-center justify-center rounded-full text-ink transition-transform hover:scale-105 active:scale-95"
     >
       {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}

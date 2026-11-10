@@ -50,15 +50,15 @@ export default function CommandPalette() {
   const items: CommandItem[] = [
     ...navLinks.map((n) => ({
       id: n.href,
-      label: `Go to ${n.label}`,
+      label: `Aller à ${n.label}`,
       hint: "Section",
       icon: <ArrowRight size={14} />,
       action: () => go(n.href),
     })),
     {
       id: "theme",
-      label: theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
-      hint: "Preference",
+      label: theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre",
+      hint: "Préférence",
       icon: theme === "dark" ? <Sun size={14} /> : <Moon size={14} />,
       action: () => {
         toggleTheme();
@@ -67,7 +67,7 @@ export default function CommandPalette() {
     },
     {
       id: "email",
-      label: `Copy email — ${socials.email}`,
+      label: `Copier l'email — ${socials.email}`,
       hint: "Contact",
       icon: <Mail size={14} />,
       action: () => {
@@ -77,7 +77,7 @@ export default function CommandPalette() {
     },
     {
       id: "github",
-      label: "Open GitHub profile",
+      label: "Ouvrir mon profil GitHub",
       hint: "Link",
       icon: <GithubIcon size={14} />,
       action: () => window.open(socials.github, "_blank"),
@@ -86,7 +86,7 @@ export default function CommandPalette() {
       ? [
           {
             id: "linkedin",
-            label: "Open LinkedIn profile",
+            label: "Ouvrir mon profil LinkedIn",
             hint: "Link",
             icon: <LinkedinIcon size={14} />,
             action: () => window.open(socials.linkedin, "_blank"),
@@ -97,7 +97,7 @@ export default function CommandPalette() {
       ? [
           {
             id: "cv",
-            label: "Download CV",
+            label: "Télécharger le CV",
             hint: "Resume",
             icon: <FileText size={14} />,
             action: () => window.open(socials.cv, "_blank"),
@@ -132,7 +132,7 @@ export default function CommandPalette() {
                 autoFocus
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Type a command or search…"
+                placeholder="Taper une commande ou rechercher…"
                 className="w-full bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none"
               />
               <kbd className="rounded border border-border-subtle px-1.5 py-0.5 font-mono text-[10px] text-ink-muted">
@@ -141,7 +141,7 @@ export default function CommandPalette() {
             </div>
             <div className="max-h-80 overflow-y-auto p-2">
               {filtered.length === 0 && (
-                <p className="px-3 py-6 text-center text-sm text-ink-muted">No results found.</p>
+                <p className="px-3 py-6 text-center text-sm text-ink-muted">Aucun résultat.</p>
               )}
               {filtered.map((item) => (
                 <button

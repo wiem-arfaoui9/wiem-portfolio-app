@@ -1,4 +1,4 @@
-export type SkillCategory = "Backend" | "Frontend" | "API" | "Databases" | "Tools";
+export type SkillCategory = "Backend" | "Frontend" | "API" | "Bases de données" | "Outils";
 
 export interface Skill {
   name: string;
@@ -12,26 +12,38 @@ export interface ArchitectureStep {
   detail: string;
 }
 
-export type ProjectStatus = "In progress" | "Early stage" | "Personal lab";
+export type ProjectKind = "Projet personnel" | "Stage";
+
+export interface ProjectStatus {
+  /** Libellé court affiché en badge, ex. "Prototype fonctionnel". */
+  label: string;
+  detail: string;
+}
 
 export interface Project {
   slug: string;
+  kind: ProjectKind;
   flagship?: boolean;
   name: string;
+  /** Description courte affichée sur la carte. */
   tagline: string;
-  description: string;
-  status: ProjectStatus;
+  /** Ligne de contexte, ex. entreprise et dates pour un stage. */
+  context?: string;
+  objective: string;
   architecture: ArchitectureStep[];
-  /** Label above the feature list, e.g. "Features" or "Planned features". */
-  featuresLabel: string;
-  features: string[];
+  /** Fonctionnalités existantes, vérifiées dans le code. */
+  achievedLabel: string;
+  achieved: string[];
+  /** Objectifs NON présentés comme terminés. */
+  planned?: string[];
   technologies: string[];
-  /** Honest "what is done so far" list. */
-  progress: string[];
-  github?: string;
-  demo?: string;
-  accent: "violet" | "cyan" | "amber";
   role: string;
+  contribution: string[];
+  skills?: string[];
+  status: ProjectStatus;
+  /** Renseigné uniquement si le dépôt existe et répond. */
+  github?: string;
+  accent: "violet" | "cyan" | "amber";
 }
 
 export interface TimelineItem {

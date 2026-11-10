@@ -15,8 +15,8 @@ export default function GitHubSection({ repos }: { repos: GithubRepo[] | null })
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="06 · GitHub"
-          title="Code, in the open."
-          description="Live data from my public GitHub repositories."
+          title="Mon code sur GitHub."
+          description="Mes dépôts publics, récupérés directement depuis GitHub."
         />
 
         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -37,7 +37,7 @@ export default function GitHubSection({ repos }: { repos: GithubRepo[] | null })
                 <h3 className="font-display text-lg text-ink">{r.name}</h3>
                 <ArrowUpRight size={16} className="shrink-0 text-ink-muted transition-colors group-hover:text-violet-soft" />
               </div>
-              <p className="mt-2 min-h-10 text-sm text-ink-muted">{r.description ?? "No description yet."}</p>
+              <p className="mt-2 min-h-10 text-sm text-ink-muted">{r.description ?? "Pas encore de description."}</p>
               <div className="mt-4 flex items-center gap-4 font-mono text-xs text-ink-muted">
                 {r.language && <span className="text-cyan">{r.language}</span>}
                 {r.stars > 0 && (
@@ -62,7 +62,7 @@ export default function GitHubSection({ repos }: { repos: GithubRepo[] | null })
             <GithubIcon size={26} className="text-violet-soft" />
             <span className="font-display text-base text-ink">@{socials.githubUser}</span>
             <span className="font-mono text-xs text-ink-muted">
-              {repos ? "View all repositories →" : "Open my GitHub profile →"}
+              {repos ? "Voir tous les dépôts →" : "Ouvrir mon profil GitHub →"}
             </span>
           </motion.a>
         </div>

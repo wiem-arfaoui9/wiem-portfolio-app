@@ -13,9 +13,9 @@ export default function Skills() {
     <section id="skills" className="relative px-6 py-28">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="02 · Skills"
-          title="What I work with, and where."
-          description="Each skill shows where I actually used it: internship or personal project."
+          eyebrow="02 · Compétences"
+          title="Ce que j'utilise, et où."
+          description="Pour chaque compétence, j'indique où je l'ai utilisée : stage ou projet personnel."
         />
 
         <div className="mt-12 flex flex-wrap gap-2">

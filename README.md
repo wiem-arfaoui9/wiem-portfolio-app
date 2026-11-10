@@ -22,7 +22,7 @@ npm run start
 
 1. **Site URL** — set `NEXT_PUBLIC_SITE_URL` (e.g. `https://your-domain.com`) in your hosting environment. It feeds the metadata, sitemap and robots.txt.
 2. **LinkedIn / CV** — in `data/nav.ts`, set `socials.linkedin` and/or `socials.cv` (put the PDF in `public/`). Until then, the corresponding buttons are hidden. Your CV is intentionally *not* in the repository.
-3. **Project links** — `data/projects.ts` points every project to your GitHub profile; replace with the exact repository URLs (and add `demo` links when available).
+3. **Liens des projets** — `data/projects.ts` : SmartDent et SIGA pointent vers leurs dépôts GitHub (vérifiés). Minassa n'a pas de lien tant qu'aucun dépôt public n'existe : ajouter `github` dans sa fiche pour afficher le bouton.
 4. **Contact form** — it opens the visitor's mail client (`mailto:`); there is no backend to maintain.
 5. **GitHub section** — repositories are fetched live from the public GitHub API (cached 1h). If the API is unreachable, the section falls back to a link to your profile.
 6. **Fonts** — Space Grotesk, Inter and JetBrains Mono are self-hosted through `@fontsource`, so builds work offline.

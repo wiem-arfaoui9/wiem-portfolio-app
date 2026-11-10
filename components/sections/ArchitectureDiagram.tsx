@@ -19,7 +19,7 @@ export default function ArchitectureDiagram() {
   return (
     <div className="relative w-full max-w-md rounded-2xl border border-border-subtle bg-bg-elevated/60 p-5 backdrop-blur-xl">
       <div className="mb-4 flex items-center justify-between">
-        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-muted">Live architecture</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-muted">Architecture</span>
         <span className="flex h-1.5 w-1.5 animate-pulse-slow rounded-full bg-cyan" />
       </div>
 
@@ -81,7 +81,7 @@ export default function ArchitectureDiagram() {
           <button
             key={s.name}
             onClick={() => setIndex(i)}
-            aria-label={`Show ${s.name} architecture`}
+            aria-label={`Afficher l'architecture de ${s.name}`}
             className={`h-1 flex-1 rounded-full transition-colors ${i === index ? "bg-violet-soft" : "bg-border-subtle"}`}
           />
         ))}

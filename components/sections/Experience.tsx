@@ -9,9 +9,9 @@ export default function Experience() {
     <section id="experience" className="relative px-6 py-28">
       <div className="mx-auto max-w-6xl">
         <SectionHeading
-          eyebrow="04 · Experience"
-          title="Internships, projects, studies."
-          description="A timeline of my internships and personal projects."
+          eyebrow="04 · Parcours"
+          title="Stages, projets et études."
+          description="Mes stages, mes projets personnels et ma formation."
         />
 
         <ol className="relative mt-16 border-l border-border-subtle pl-8 md:pl-10">

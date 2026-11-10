@@ -5,66 +5,45 @@ import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import { Project } from "@/types";
 
-const accentMap = {
-  violet: "from-violet/25 via-violet/5",
-  cyan: "from-cyan/25 via-cyan/5",
-  amber: "from-amber/25 via-amber/5",
-};
-
 export default function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 30 }}
+      initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ duration: 0.55, delay: index * 0.08 }}
-      className="group relative"
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      className="group h-full"
     >
-      <Link href={`/projects/${project.slug}`} data-cursor="pointer" className="block">
-        <div
-          className={`glass relative overflow-hidden rounded-2xl p-1 transition-transform duration-300 group-hover:-translate-y-1.5`}
-        >
-          <div
-            className={`relative flex h-52 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${accentMap[project.accent]} to-transparent`}
-          >
-            <div className="absolute inset-0 grid-overlay opacity-40" />
-            <span className="relative font-display text-4xl font-medium text-ink/90 md:text-5xl">
-              {project.name}
-            </span>
-            <span className="absolute right-4 top-4 rounded-full border border-border-subtle bg-bg/60 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-ink-muted backdrop-blur">
-              {project.status}
-            </span>
-            {project.flagship && (
-              <span className="absolute left-4 top-4 rounded-full bg-amber/15 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber">
-                Flagship
-              </span>
-            )}
-          </div>
+      <Link
+        href={`/projects/${project.slug}`}
+        data-cursor="pointer"
+        className="glass flex h-full flex-col rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
+      >
+        <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-widest">
+          <span className={project.kind === "Stage" ? "text-cyan" : "text-violet-soft"}>{project.kind}</span>
+          <span className="text-ink-muted">·</span>
+          <span className="text-ink-muted">{project.status.label}</span>
+        </div>
 
-          <div className="p-5">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <h3 className="font-display text-xl text-ink">{project.name}</h3>
-                <p className="mt-1 text-sm text-ink-muted">{project.tagline}</p>
-              </div>
-              <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle text-ink transition-all group-hover:border-violet-soft group-hover:bg-violet-soft/10">
-                <ArrowUpRight size={16} />
-              </span>
-            </div>
+        <div className="mt-4 flex items-start justify-between gap-3">
+          <h3 className="font-display text-2xl text-ink">{project.name}</h3>
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle text-ink transition-colors group-hover:border-violet-soft group-hover:bg-violet-soft/10">
+            <ArrowUpRight size={16} />
+          </span>
+        </div>
 
-            <div className="mt-4 flex flex-wrap gap-2">
-              {project.technologies.slice(0, 4).map((t) => (
-                <span key={t} className="rounded-full border border-border-subtle px-2.5 py-1 font-mono text-[10px] text-ink-muted">
-                  {t}
-                </span>
-              ))}
-              {project.technologies.length > 4 && (
-                <span className="rounded-full border border-border-subtle px-2.5 py-1 font-mono text-[10px] text-ink-muted">
-                  +{project.technologies.length - 4}
-                </span>
-              )}
-            </div>
-          </div>
+        <p className="mt-3 text-sm leading-relaxed text-ink-muted">{project.tagline}</p>
+
+        <p className="mt-5 font-mono text-xs text-ink-muted">
+          {project.architecture.map((s) => s.label).join(" → ")}
+        </p>
+
+        <div className="mt-auto flex flex-wrap gap-2 pt-6">
+          {project.technologies.slice(0, 5).map((t) => (
+            <span key={t} className="rounded-full border border-border-subtle px-2.5 py-1 font-mono text-[10px] text-ink-muted">
+              {t}
+            </span>
+          ))}
         </div>
       </Link>
     </motion.div>

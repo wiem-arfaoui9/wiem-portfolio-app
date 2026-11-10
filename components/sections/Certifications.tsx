@@ -11,8 +11,8 @@ export default function Certifications() {
       <div className="mx-auto max-w-6xl">
         <SectionHeading
           eyebrow="05 · Certifications"
-          title="Certifications & involvement."
-          description="Certificates earned and student-club commitments."
+          title="Certifications et engagements."
+          description="Certificats obtenus et clubs étudiants."
         />
 
         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

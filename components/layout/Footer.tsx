@@ -12,7 +12,7 @@ export default function Footer() {
             Wiem Arfaoui
           </Link>
           <p className="mt-3 max-w-xs text-sm text-ink-muted">
-            Computer Science student at ISET Zaghouan, looking for a full-stack PFE internship (2026/2027).
+            Étudiante en informatique à l&apos;ISET Zaghouan, à la recherche d&apos;un stage de PFE en développement full-stack (2026/2027).
           </p>
           <div className="mt-5 flex items-center gap-3">
             <a
@@ -48,7 +48,7 @@ export default function Footer() {
 
         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Navigate</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Navigation</p>
             <div className="mt-4 flex flex-col gap-2.5">
               {navLinks.map((l) => (
                 <a key={l.href} href={l.href} className="text-sm text-ink-muted transition-colors hover:text-ink">
@@ -58,16 +58,16 @@ export default function Footer() {
             </div>
           </div>
           <div>
-            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Based in</p>
-            <p className="mt-4 text-sm text-ink-muted">Zaghouan, Tunisia</p>
-            <p className="mt-2 text-sm text-ink-muted">Available for PFE 2026/2027</p>
+            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Localisation</p>
+            <p className="mt-4 text-sm text-ink-muted">Zaghouan, Tunisie</p>
+            <p className="mt-2 text-sm text-ink-muted">Disponible pour un stage de PFE 2026/2027</p>
           </div>
         </div>
       </div>
 
       <div className="mx-auto mt-12 flex max-w-6xl flex-col items-center justify-between gap-3 border-t border-border-subtle pt-6 text-xs text-ink-muted sm:flex-row">
-        <p>© {new Date().getFullYear()} Wiem Arfaoui. Built with Next.js.</p>
-        <p className="font-mono">status: seeking PFE internship</p>
+        <p>© {new Date().getFullYear()} Wiem Arfaoui. Site réalisé avec Next.js.</p>
+        <p className="font-mono">recherche un stage de PFE</p>
       </div>
     </footer>
   );
