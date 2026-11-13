@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
-import { navLinks, socials } from "@/data/nav";
+import { gmailComposeUrl, navLinks, socials } from "@/data/nav";
 
 export default function Footer() {
   return (
@@ -36,7 +36,9 @@ export default function Footer() {
               </a>
             )}
             <a
-              href={`mailto:${socials.email}`}
+              href={gmailComposeUrl(socials.email)}
+              target="_blank"
+              rel="noopener noreferrer"
               data-cursor="pointer"
               className="glass flex h-9 w-9 items-center justify-center rounded-full text-ink transition-transform hover:-translate-y-0.5"
               aria-label="Email"

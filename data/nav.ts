@@ -10,6 +10,14 @@ export const navLinks: NavLink[] = [
   { label: "Contact", href: "#contact" },
 ];
 
+/** Ouvre la fenêtre de rédaction Gmail (web) au lieu de l'application mail par défaut (Outlook, etc.). */
+export function gmailComposeUrl(to: string, subject = "", body = "") {
+  const p = new URLSearchParams({ view: "cm", fs: "1", to });
+  if (subject) p.set("su", subject);
+  if (body) p.set("body", body);
+  return `https://mail.google.com/mail/?${p.toString()}`;
+}
+
 export const socials = {
   email: "wiem.arfaoui.989@gmail.com",
   githubUser: "wiem-arfaoui9",

@@ -6,7 +6,7 @@ import { Mail, Send, CheckCircle2 } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "@/components/ui/BrandIcons";
 import SectionHeading from "@/components/ui/SectionHeading";
 import MagneticButton from "@/components/ui/MagneticButton";
-import { socials } from "@/data/nav";
+import { gmailComposeUrl, socials } from "@/data/nav";
 
 export default function Contact() {
   const [opened, setOpened] = useState(false);
@@ -15,9 +15,9 @@ export default function Contact() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const f = new FormData(e.currentTarget);
-    const subject = encodeURIComponent(String(f.get("subject") ?? ""));
-    const body = encodeURIComponent(`${f.get("message") ?? ""}\n\n— ${f.get("name") ?? ""} (${f.get("email") ?? ""})`);
-    window.location.href = `mailto:${socials.email}?subject=${subject}&body=${body}`;
+    const subject = String(f.get("subject") ?? "");
+    const body = `${f.get("message") ?? ""}\n\n— ${f.get("name") ?? ""} (${f.get("email") ?? ""})`;
+    window.open(gmailComposeUrl(socials.email, subject, body), "_blank", "noopener,noreferrer");
     setOpened(true);
   };
 
@@ -29,7 +29,7 @@ export default function Contact() {
         <div className="mx-auto mt-14 grid max-w-4xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="flex flex-col gap-4">
             {[
-              { icon: Mail, label: "Email", value: socials.email, href: `mailto:${socials.email}` },
+              { icon: Mail, label: "Email", value: socials.email, href: gmailComposeUrl(socials.email) },
               ...(socials.linkedin
                 ? [{ icon: LinkedinIcon, label: "LinkedIn", value: "Profil LinkedIn", href: socials.linkedin }]
                 : []),
@@ -68,8 +68,8 @@ export default function Contact() {
             {opened ? (
               <div className="flex h-full min-h-[280px] flex-col items-center justify-center gap-3 text-center">
                 <CheckCircle2 className="text-cyan" size={36} />
-                <p className="font-display text-lg text-ink">Votre application mail devrait s&apos;ouvrir.</p>
-                <p className="text-sm text-ink-muted">Sinon, écrivez-moi directement à l&apos;adresse indiquée à gauche.</p>
+                <p className="font-display text-lg text-ink">Gmail s&apos;est ouvert dans un nouvel onglet.</p>
+                <p className="text-sm text-ink-muted">Il ne reste qu&apos;à cliquer sur « Envoyer ». Sinon, écrivez-moi directement à l&apos;adresse indiquée à gauche.</p>
               </div>
             ) : (
               <div className="grid gap-4">
