@@ -1,0 +1,1554 @@
+From 5d3dc29eaceee000da4ea3568b8d2685c9eded5e Mon Sep 17 00:00:00 2001
+From: "Claude (pour Wiem Arfaoui)" <noreply@anthropic.com>
+Date: Tue, 10 Nov 2026 12:29:45 +0000
+Subject: [PATCH 2/2] feat: rewrite project presentation in French from
+ verified code and CV
+
+- Present Minassa, SmartDent and the SIGA internship with one consistent
+  structure: goal, delivered features, technologies, role, current status, repo
+- SmartDent: list only features found in the code (roles, patients, appointments,
+  dental chart, payments/PDF, dashboard, messaging, patient portal, AI summary)
+- SIGA: shown as an internship; contribution limited to what git history shows
+  (tasks module in Spring Boot, task screens and guards in Angular)
+- Minassa: only CV-confirmed facts; planned features clearly labelled as goals
+- Remove the DevSecOps project (not in CV, no repository)
+- Add GitHub links only for repositories that exist and respond
+- Translate the whole site to French and replace generic hero copy
+---
+ README.md                                   |   2 +-
+ app/layout.tsx                              |  30 +--
+ app/not-found.tsx                           |   6 +-
+ app/opengraph-image.tsx                     |   6 +-
+ app/projects/[slug]/page.tsx                | 217 ++++++++++----------
+ components/layout/Footer.tsx                |  14 +-
+ components/layout/Navbar.tsx                |   6 +-
+ components/projects/ProjectCard.tsx         |  83 +++-----
+ components/sections/About.tsx               |  22 +-
+ components/sections/ArchitectureDiagram.tsx |   4 +-
+ components/sections/Certifications.tsx      |   4 +-
+ components/sections/Contact.tsx             |  18 +-
+ components/sections/Experience.tsx          |   6 +-
+ components/sections/GitHubSection.tsx       |   8 +-
+ components/sections/Hero.tsx                |  22 +-
+ components/sections/Projects.tsx            |  44 +---
+ components/sections/Skills.tsx              |   6 +-
+ components/ui/BackToTop.tsx                 |   2 +-
+ components/ui/CommandPalette.tsx            |  18 +-
+ components/ui/Loader.tsx                    |   2 +-
+ components/ui/ThemeToggle.tsx               |   2 +-
+ data/certifications.ts                      |  50 +----
+ data/experience.ts                          |  59 +-----
+ data/nav.ts                                 |   8 +-
+ data/projects.ts                            | 174 +++++++++-------
+ data/skills.ts                              |  38 ++--
+ types/index.ts                              |  34 ++-
+ 27 files changed, 390 insertions(+), 495 deletions(-)
+
+diff --git a/README.md b/README.md
+index f95298f..d5993f5 100644
+--- a/README.md
++++ b/README.md
+@@ -22,7 +22,7 @@ npm run start
+ 
+ 1. **Site URL** — set `NEXT_PUBLIC_SITE_URL` (e.g. `https://your-domain.com`) in your hosting environment. It feeds the metadata, sitemap and robots.txt.
+ 2. **LinkedIn / CV** — in `data/nav.ts`, set `socials.linkedin` and/or `socials.cv` (put the PDF in `public/`). Until then, the corresponding buttons are hidden. Your CV is intentionally *not* in the repository.
+-3. **Project links** — `data/projects.ts` points every project to your GitHub profile; replace with the exact repository URLs (and add `demo` links when available).
++3. **Liens des projets** — `data/projects.ts` : SmartDent et SIGA pointent vers leurs dépôts GitHub (vérifiés). Minassa n'a pas de lien tant qu'aucun dépôt public n'existe : ajouter `github` dans sa fiche pour afficher le bouton.
+ 4. **Contact form** — it opens the visitor's mail client (`mailto:`); there is no backend to maintain.
+ 5. **GitHub section** — repositories are fetched live from the public GitHub API (cached 1h). If the API is unreachable, the section falls back to a link to your profile.
+ 6. **Fonts** — Space Grotesk, Inter and JetBrains Mono are self-hosted through `@fontsource`, so builds work offline.
+diff --git a/app/layout.tsx b/app/layout.tsx
+index cbc27cb..886bec0 100644
+--- a/app/layout.tsx
++++ b/app/layout.tsx
+@@ -15,37 +15,27 @@ import { siteUrl } from "@/lib/site";
+ export const metadata: Metadata = {
+   metadataBase: new URL(siteUrl),
+   title: {
+-    default: "Wiem Arfaoui — Full Stack Developer",
++    default: "Wiem Arfaoui — Développeuse full-stack, stage PFE 2026/2027",
+     template: "%s — Wiem Arfaoui",
+   },
+   description:
+-    "Portfolio of Wiem Arfaoui, third-year Computer Science student at ISET Zaghouan. Java, Spring Boot, Angular, Laravel, React and Next.js. Looking for a full-stack PFE internship for 2026/2027.",
+-  keywords: [
+-    "Wiem Arfaoui",
+-    "Full Stack Developer",
+-    "Spring Boot",
+-    "Angular",
+-    "Laravel",
+-    "Next.js",
+-    "ISET Zaghouan",
+-    "Stage PFE 2026",
+-    "Tunisia",
+-  ],
++    "Portfolio de Wiem Arfaoui, étudiante en 3e année de licence en informatique à l'ISET Zaghouan. Java, Spring Boot, Angular, Laravel, React, Next.js. Recherche un stage de PFE en développement full-stack pour 2026/2027.",
++  keywords: ["Wiem Arfaoui", "développeuse full-stack", "Spring Boot", "Angular", "Laravel", "Next.js", "ISET Zaghouan", "stage PFE 2026", "Tunisie"],
+   authors: [{ name: "Wiem Arfaoui" }],
+   creator: "Wiem Arfaoui",
+   openGraph: {
+     type: "website",
++    locale: "fr_FR",
+     url: siteUrl,
+-    title: "Wiem Arfaoui — Full Stack Developer",
+-    description:
+-      "Building modern digital experiences with code. Computer Science student looking for a full-stack PFE internship (2026/2027).",
++    title: "Wiem Arfaoui — Développeuse full-stack",
++    description: "Étudiante en informatique à l'ISET Zaghouan, à la recherche d'un stage de PFE en développement full-stack (2026/2027).",
+     siteName: "Wiem Arfaoui",
+-    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Wiem Arfaoui — Full Stack Developer" }],
++    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: "Wiem Arfaoui — Développeuse full-stack" }],
+   },
+   twitter: {
+     card: "summary_large_image",
+-    title: "Wiem Arfaoui — Full Stack Developer",
+-    description: "Building modern digital experiences with code.",
++    title: "Wiem Arfaoui — Développeuse full-stack",
++    description: "Stage de PFE 2026/2027 en développement full-stack.",
+     images: ["/opengraph-image"],
+   },
+   robots: { index: true, follow: true },
+@@ -53,7 +43,7 @@ export const metadata: Metadata = {
+ 
+ export default function RootLayout({ children }: { children: React.ReactNode }) {
+   return (
+-    <html lang="en" data-theme="dark" suppressHydrationWarning>
++    <html lang="fr" data-theme="dark" suppressHydrationWarning>
+       <body className={`cursor-none-desktop antialiased`}>
+         <ThemeProvider>
+           <Loader />
+diff --git a/app/not-found.tsx b/app/not-found.tsx
+index bd61729..b9cbef7 100644
+--- a/app/not-found.tsx
++++ b/app/not-found.tsx
+@@ -4,15 +4,15 @@ export default function NotFound() {
+   return (
+     <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-bg px-6 text-center">
+       <p className="font-mono text-xs uppercase tracking-[0.3em] text-violet-soft">404</p>
+-      <h1 className="font-display text-4xl text-ink">This route doesn&apos;t exist.</h1>
++      <h1 className="font-display text-4xl text-ink">Cette page n&apos;existe pas.</h1>
+       <p className="max-w-sm text-sm text-ink-muted">
+-        The page you&apos;re looking for isn&apos;t part of this build. Let&apos;s get you back on track.
++        La page demandée est introuvable. Retournez à l&apos;accueil.
+       </p>
+       <Link
+         href="/"
+         className="mt-4 inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm text-bg transition-opacity hover:opacity-90"
+       >
+-        Back home
++        Retour à l&apos;accueil
+       </Link>
+     </div>
+   );
+diff --git a/app/opengraph-image.tsx b/app/opengraph-image.tsx
+index 18ea9ad..8f8dabe 100644
+--- a/app/opengraph-image.tsx
++++ b/app/opengraph-image.tsx
+@@ -36,16 +36,16 @@ export default async function OGImage() {
+           >
+             WA
+           </div>
+-          <span style={{ fontSize: 24, color: "#9497ac" }}>ISET Zaghouan · Tunisia</span>
++          <span style={{ fontSize: 24, color: "#9497ac" }}>ISET Zaghouan · Tunisie</span>
+         </div>
+         <div style={{ display: "flex", fontSize: 68, fontWeight: 600, marginTop: 40, lineHeight: 1.15 }}>
+           Wiem Arfaoui
+         </div>
+         <div style={{ display: "flex", fontSize: 34, color: "#a89bff", marginTop: 12 }}>
+-          Full Stack Developer
++          Développeuse full-stack
+         </div>
+         <div style={{ display: "flex", fontSize: 24, color: "#9497ac", marginTop: 28, maxWidth: 800 }}>
+-          Spring Boot · Angular · Laravel · Next.js — looking for a PFE internship 2026/2027.
++          Spring Boot · Angular · Laravel · Next.js — recherche un stage de PFE 2026/2027.
+         </div>
+       </div>
+     ),
+diff --git a/app/projects/[slug]/page.tsx b/app/projects/[slug]/page.tsx
+index b6b9343..cb4fb6f 100644
+--- a/app/projects/[slug]/page.tsx
++++ b/app/projects/[slug]/page.tsx
+@@ -1,11 +1,12 @@
+ import { notFound } from "next/navigation";
+ import Link from "next/link";
+ import type { Metadata } from "next";
+-import { ArrowLeft, ArrowUpRight, Layers, ListChecks, Sparkles } from "lucide-react";
+-import { GithubIcon } from "@/components/ui/BrandIcons";
++import { ArrowLeft, ArrowRight } from "lucide-react";
+ import Navbar from "@/components/layout/Navbar";
+ import Footer from "@/components/layout/Footer";
++import { GithubIcon } from "@/components/ui/BrandIcons";
+ import { projects, getProjectBySlug } from "@/data/projects";
++import type { ReactNode } from "react";
+ import ProjectCard from "@/components/projects/ProjectCard";
+ 
+ export async function generateStaticParams() {
+@@ -17,15 +18,37 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
+   const project = getProjectBySlug(slug);
+   if (!project) return {};
+   return {
+-    title: `${project.name} — ${project.tagline}`,
+-    description: project.description,
+-    openGraph: {
+-      title: `${project.name} — Wiem Arfaoui`,
+-      description: project.description,
+-    },
++    title: `${project.name} — ${project.kind}`,
++    description: project.tagline,
++    openGraph: { title: `${project.name} — Wiem Arfaoui`, description: project.tagline },
+   };
+ }
+ 
++function Block({ n, title, children }: { n: string; title: string; children: ReactNode }) {
++  return (
++    <section className="mt-12 border-t border-border-subtle pt-8">
++      <h2 className="flex items-baseline gap-3 font-display text-xl text-ink">
++        <span className="font-mono text-xs text-violet-soft">{n}</span>
++        {title}
++      </h2>
++      <div className="mt-4">{children}</div>
++    </section>
++  );
++}
++
++function List({ items }: { items: string[] }) {
++  return (
++    <ul className="flex flex-col gap-2.5">
++      {items.map((item) => (
++        <li key={item} className="flex gap-3 text-sm leading-relaxed text-ink-muted">
++          <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan" />
++          {item}
++        </li>
++      ))}
++    </ul>
++  );
++}
++
+ export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+   const { slug } = await params;
+   const project = getProjectBySlug(slug);
+@@ -36,124 +59,94 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug:
+   return (
+     <>
+       <Navbar />
+-      <main className="px-6 pb-28 pt-36">
+-        <div className="mx-auto max-w-4xl">
+-          <Link
+-            href="/#projects"
+-            className="inline-flex items-center gap-2 font-mono text-xs text-ink-muted transition-colors hover:text-ink"
+-          >
+-            <ArrowLeft size={14} /> Back to projects
++      <main className="px-6 pb-24 pt-32">
++        <article className="mx-auto max-w-3xl">
++          <Link href="/#projects" className="inline-flex items-center gap-2 font-mono text-xs text-ink-muted transition-colors hover:text-ink">
++            <ArrowLeft size={14} /> Retour aux projets
+           </Link>
+ 
+-          <div className="mt-8 flex flex-wrap items-center gap-3">
+-            {project.flagship && (
+-              <span className="rounded-full bg-amber/15 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber">
+-                Flagship Project
+-              </span>
++          {/* 1. Nom et description courte */}
++          <p className="mt-8 font-mono text-xs uppercase tracking-widest text-violet-soft">
++            {project.kind} · {project.status.label}
++          </p>
++          <h1 className="mt-3 font-display text-4xl font-medium text-ink sm:text-5xl">{project.name}</h1>
++          <p className="mt-4 text-lg leading-relaxed text-ink-muted">{project.tagline}</p>
++          {project.context && <p className="mt-2 text-sm text-ink-muted">{project.context}</p>}
++
++          {/* 2. Objectif */}
++          <Block n="01" title="Objectif">
++            <p className="text-sm leading-relaxed text-ink-muted">{project.objective}</p>
++            <p className="mt-5 flex flex-wrap items-center gap-2 font-mono text-xs text-ink">
++              {project.architecture.map((s, i) => (
++                <span key={s.label} className="flex items-center gap-2">
++                  <span className="glass rounded-lg px-3 py-1.5">
++                    {s.label} <span className="text-ink-muted">· {s.detail}</span>
++                  </span>
++                  {i < project.architecture.length - 1 && <ArrowRight size={14} className="text-ink-muted" />}
++                </span>
++              ))}
++            </p>
++          </Block>
++
++          {/* 3. Fonctionnalités réalisées */}
++          <Block n="02" title={project.achievedLabel}>
++            <List items={project.achieved} />
++            {project.planned && (
++              <div className="mt-6">
++                <p className="mb-3 font-mono text-xs uppercase tracking-widest text-amber">Objectifs (pas encore terminés)</p>
++                <List items={project.planned} />
++              </div>
+             )}
+-            <span className="rounded-full border border-border-subtle px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-cyan">
+-              {project.status}
+-            </span>
+-            <span className="font-mono text-xs text-ink-muted">{project.role}</span>
+-          </div>
++          </Block>
+ 
+-          <h1 className="mt-4 font-display text-4xl font-medium text-ink sm:text-5xl md:text-6xl">
+-            {project.name}
+-          </h1>
+-          <p className="mt-3 text-lg text-ink-muted">{project.tagline}</p>
+-          <p className="mt-6 max-w-2xl text-base leading-relaxed text-ink-muted">{project.description}</p>
++          {/* 4. Technologies */}
++          <Block n="03" title="Technologies">
++            <div className="flex flex-wrap gap-2">
++              {project.technologies.map((t) => (
++                <span key={t} className="glass rounded-full px-3 py-1.5 font-mono text-xs text-ink-muted">
++                  {t}
++                </span>
++              ))}
++            </div>
++          </Block>
+ 
+-          <div className="mt-8 flex flex-wrap gap-3">
+-            {project.github && (
++          {/* 5. Rôle et contribution */}
++          <Block n="04" title="Mon rôle et ma contribution">
++            <p className="mb-4 text-sm leading-relaxed text-ink">{project.role}</p>
++            <List items={project.contribution} />
++            {project.skills && (
++              <div className="mt-6">
++                <p className="mb-3 font-mono text-xs uppercase tracking-widest text-ink-muted">Compétences pratiquées</p>
++                <List items={project.skills} />
++              </div>
++            )}
++          </Block>
++
++          {/* 6. État actuel */}
++          <Block n="05" title="État actuel">
++            <p className="text-sm leading-relaxed text-ink-muted">
++              <span className="font-medium text-ink">{project.status.label}.</span> {project.status.detail}
++            </p>
++          </Block>
++
++          {/* 7. Dépôt GitHub (seulement s'il existe) */}
++          {project.github && (
++            <Block n="06" title="Code source">
+               <a
+                 href={project.github}
+                 target="_blank"
++                rel="noreferrer"
+                 data-cursor="pointer"
+                 className="glass inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm text-ink transition-colors hover:bg-white/5"
+               >
+-                <GithubIcon size={15} /> View Code
+-              </a>
+-            )}
+-            {project.demo && (
+-              <a
+-                href={project.demo}
+-                target="_blank"
+-                data-cursor="pointer"
+-                className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-2.5 text-sm text-bg transition-opacity hover:opacity-90"
+-              >
+-                Live Demo <ArrowUpRight size={15} />
++                <GithubIcon size={15} /> Voir le dépôt GitHub
+               </a>
+-            )}
+-          </div>
+-
+-          <div className="mt-16 flex flex-wrap gap-2">
+-            {project.technologies.map((t) => (
+-              <span key={t} className="glass rounded-full px-3 py-1.5 font-mono text-xs text-ink-muted">
+-                {t}
+-              </span>
+-            ))}
+-          </div>
+-
+-          {/* Architecture */}
+-          <section className="mt-16">
+-            <div className="mb-6 flex items-center gap-2 text-violet-soft">
+-              <Layers size={18} />
+-              <h2 className="font-mono text-xs uppercase tracking-[0.3em]">Architecture</h2>
+-            </div>
+-            <div className="flex flex-col">
+-              {project.architecture.map((step, i) => (
+-                <div key={step.label} className="relative pl-10">
+-                  {i < project.architecture.length - 1 && (
+-                    <span className="absolute left-[15px] top-8 h-full w-px bg-border-subtle" />
+-                  )}
+-                  <span className="absolute left-0 top-1 flex h-8 w-8 items-center justify-center rounded-full border border-border-subtle font-mono text-xs text-ink-muted">
+-                    {i + 1}
+-                  </span>
+-                  <div className="glass mb-4 rounded-xl p-4">
+-                    <p className="font-display text-base text-ink">{step.label}</p>
+-                    <p className="mt-1 text-sm text-ink-muted">{step.detail}</p>
+-                  </div>
+-                </div>
+-              ))}
+-            </div>
+-          </section>
+-
+-          {/* Features */}
+-          <section className="mt-14">
+-            <div className="mb-6 flex items-center gap-2 text-violet-soft">
+-              <Sparkles size={18} />
+-              <h2 className="font-mono text-xs uppercase tracking-[0.3em]">{project.featuresLabel}</h2>
+-            </div>
+-            <div className="grid gap-3 sm:grid-cols-2">
+-              {project.features.map((f) => (
+-                <div key={f} className="glass rounded-xl px-4 py-3 text-sm text-ink-muted">
+-                  {f}
+-                </div>
+-              ))}
+-            </div>
+-          </section>
+-
+-          {/* Progress */}
+-          {project.progress.length > 0 && (
+-            <section className="mt-14">
+-              <div className="mb-6 flex items-center gap-2 text-violet-soft">
+-                <ListChecks size={18} />
+-                <h2 className="font-mono text-xs uppercase tracking-[0.3em]">Where it stands</h2>
+-              </div>
+-              <ul className="flex flex-col gap-3">
+-                {project.progress.map((r) => (
+-                  <li key={r} className="flex items-start gap-3 text-sm text-ink-muted">
+-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan" />
+-                    {r}
+-                  </li>
+-                ))}
+-              </ul>
+-            </section>
++            </Block>
+           )}
+-        </div>
++        </article>
+ 
+         <div className="mx-auto mt-24 max-w-6xl">
+-          <p className="mb-8 font-mono text-xs uppercase tracking-[0.3em] text-ink-muted">More projects</p>
++          <p className="mb-8 font-mono text-xs uppercase tracking-[0.3em] text-ink-muted">Autres projets</p>
+           <div className="grid gap-6 md:grid-cols-2">
+             {others.map((p, i) => (
+               <ProjectCard key={p.slug} project={p} index={i} />
+@@ -165,3 +158,5 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug:
+     </>
+   );
+ }
++
++
+diff --git a/components/layout/Footer.tsx b/components/layout/Footer.tsx
+index d65ff98..2ed7af6 100644
+--- a/components/layout/Footer.tsx
++++ b/components/layout/Footer.tsx
+@@ -12,7 +12,7 @@ export default function Footer() {
+             Wiem Arfaoui
+           </Link>
+           <p className="mt-3 max-w-xs text-sm text-ink-muted">
+-            Computer Science student at ISET Zaghouan, looking for a full-stack PFE internship (2026/2027).
++            Étudiante en informatique à l&apos;ISET Zaghouan, à la recherche d&apos;un stage de PFE en développement full-stack (2026/2027).
+           </p>
+           <div className="mt-5 flex items-center gap-3">
+             <a
+@@ -48,7 +48,7 @@ export default function Footer() {
+ 
+         <div className="grid grid-cols-2 gap-10 sm:grid-cols-3">
+           <div>
+-            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Navigate</p>
++            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Navigation</p>
+             <div className="mt-4 flex flex-col gap-2.5">
+               {navLinks.map((l) => (
+                 <a key={l.href} href={l.href} className="text-sm text-ink-muted transition-colors hover:text-ink">
+@@ -58,16 +58,16 @@ export default function Footer() {
+             </div>
+           </div>
+           <div>
+-            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Based in</p>
+-            <p className="mt-4 text-sm text-ink-muted">Zaghouan, Tunisia</p>
+-            <p className="mt-2 text-sm text-ink-muted">Available for PFE 2026/2027</p>
++            <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">Localisation</p>
++            <p className="mt-4 text-sm text-ink-muted">Zaghouan, Tunisie</p>
++            <p className="mt-2 text-sm text-ink-muted">Disponible pour un stage de PFE 2026/2027</p>
+           </div>
+         </div>
+       </div>
+ 
+       <div className="mx-auto mt-12 flex max-w-6xl flex-col items-center justify-between gap-3 border-t border-border-subtle pt-6 text-xs text-ink-muted sm:flex-row">
+-        <p>© {new Date().getFullYear()} Wiem Arfaoui. Built with Next.js.</p>
+-        <p className="font-mono">status: seeking PFE internship</p>
++        <p>© {new Date().getFullYear()} Wiem Arfaoui. Site réalisé avec Next.js.</p>
++        <p className="font-mono">recherche un stage de PFE</p>
+       </div>
+     </footer>
+   );
+diff --git a/components/layout/Navbar.tsx b/components/layout/Navbar.tsx
+index 2aafbcb..52b7908 100644
+--- a/components/layout/Navbar.tsx
++++ b/components/layout/Navbar.tsx
+@@ -69,13 +69,13 @@ export default function Navbar() {
+               className="hidden bg-ink text-bg hover:opacity-90 md:inline-flex"
+             >
+               <Terminal size={14} />
+-              Hire me
++              Me contacter
+             </MagneticButton>
+             <button
+               data-cursor="pointer"
+               onClick={() => setMenuOpen(true)}
+               className="glass flex h-9 w-9 items-center justify-center rounded-full text-ink md:hidden"
+-              aria-label="Open menu"
++              aria-label="Ouvrir le menu"
+             >
+               <Menu size={16} />
+             </button>
+@@ -96,7 +96,7 @@ export default function Navbar() {
+               <button
+                 onClick={() => setMenuOpen(false)}
+                 className="glass flex h-9 w-9 items-center justify-center rounded-full text-ink"
+-                aria-label="Close menu"
++                aria-label="Fermer le menu"
+               >
+                 <X size={16} />
+               </button>
+diff --git a/components/projects/ProjectCard.tsx b/components/projects/ProjectCard.tsx
+index 1b8d7f9..23351de 100644
+--- a/components/projects/ProjectCard.tsx
++++ b/components/projects/ProjectCard.tsx
+@@ -5,66 +5,45 @@ import { motion } from "framer-motion";
+ import { ArrowUpRight } from "lucide-react";
+ import { Project } from "@/types";
+ 
+-const accentMap = {
+-  violet: "from-violet/25 via-violet/5",
+-  cyan: "from-cyan/25 via-cyan/5",
+-  amber: "from-amber/25 via-amber/5",
+-};
+-
+ export default function ProjectCard({ project, index }: { project: Project; index: number }) {
+   return (
+     <motion.div
+-      initial={{ opacity: 0, y: 30 }}
++      initial={{ opacity: 0, y: 24 }}
+       whileInView={{ opacity: 1, y: 0 }}
+       viewport={{ once: true }}
+-      transition={{ duration: 0.55, delay: index * 0.08 }}
+-      className="group relative"
++      transition={{ duration: 0.5, delay: index * 0.08 }}
++      className="group h-full"
+     >
+-      <Link href={`/projects/${project.slug}`} data-cursor="pointer" className="block">
+-        <div
+-          className={`glass relative overflow-hidden rounded-2xl p-1 transition-transform duration-300 group-hover:-translate-y-1.5`}
+-        >
+-          <div
+-            className={`relative flex h-52 items-center justify-center overflow-hidden rounded-xl bg-gradient-to-br ${accentMap[project.accent]} to-transparent`}
+-          >
+-            <div className="absolute inset-0 grid-overlay opacity-40" />
+-            <span className="relative font-display text-4xl font-medium text-ink/90 md:text-5xl">
+-              {project.name}
+-            </span>
+-            <span className="absolute right-4 top-4 rounded-full border border-border-subtle bg-bg/60 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-ink-muted backdrop-blur">
+-              {project.status}
+-            </span>
+-            {project.flagship && (
+-              <span className="absolute left-4 top-4 rounded-full bg-amber/15 px-3 py-1 font-mono text-[10px] uppercase tracking-widest text-amber">
+-                Flagship
+-              </span>
+-            )}
+-          </div>
++      <Link
++        href={`/projects/${project.slug}`}
++        data-cursor="pointer"
++        className="glass flex h-full flex-col rounded-2xl p-6 transition-transform duration-300 hover:-translate-y-1"
++      >
++        <div className="flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-widest">
++          <span className={project.kind === "Stage" ? "text-cyan" : "text-violet-soft"}>{project.kind}</span>
++          <span className="text-ink-muted">·</span>
++          <span className="text-ink-muted">{project.status.label}</span>
++        </div>
+ 
+-          <div className="p-5">
+-            <div className="flex items-start justify-between gap-3">
+-              <div>
+-                <h3 className="font-display text-xl text-ink">{project.name}</h3>
+-                <p className="mt-1 text-sm text-ink-muted">{project.tagline}</p>
+-              </div>
+-              <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle text-ink transition-all group-hover:border-violet-soft group-hover:bg-violet-soft/10">
+-                <ArrowUpRight size={16} />
+-              </span>
+-            </div>
++        <div className="mt-4 flex items-start justify-between gap-3">
++          <h3 className="font-display text-2xl text-ink">{project.name}</h3>
++          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-border-subtle text-ink transition-colors group-hover:border-violet-soft group-hover:bg-violet-soft/10">
++            <ArrowUpRight size={16} />
++          </span>
++        </div>
++
++        <p className="mt-3 text-sm leading-relaxed text-ink-muted">{project.tagline}</p>
+ 
+-            <div className="mt-4 flex flex-wrap gap-2">
+-              {project.technologies.slice(0, 4).map((t) => (
+-                <span key={t} className="rounded-full border border-border-subtle px-2.5 py-1 font-mono text-[10px] text-ink-muted">
+-                  {t}
+-                </span>
+-              ))}
+-              {project.technologies.length > 4 && (
+-                <span className="rounded-full border border-border-subtle px-2.5 py-1 font-mono text-[10px] text-ink-muted">
+-                  +{project.technologies.length - 4}
+-                </span>
+-              )}
+-            </div>
+-          </div>
++        <p className="mt-5 font-mono text-xs text-ink-muted">
++          {project.architecture.map((s) => s.label).join(" → ")}
++        </p>
++
++        <div className="mt-auto flex flex-wrap gap-2 pt-6">
++          {project.technologies.slice(0, 5).map((t) => (
++            <span key={t} className="rounded-full border border-border-subtle px-2.5 py-1 font-mono text-[10px] text-ink-muted">
++              {t}
++            </span>
++          ))}
+         </div>
+       </Link>
+     </motion.div>
+diff --git a/components/sections/About.tsx b/components/sections/About.tsx
+index bea672c..9248273 100644
+--- a/components/sections/About.tsx
++++ b/components/sections/About.tsx
+@@ -7,23 +7,23 @@ import SectionHeading from "@/components/ui/SectionHeading";
+ const pillars = [
+   {
+     icon: GraduationCap,
+-    title: "Computer Science student",
+-    text: "Third year of the Licence en Technologie de l'Informatique (DSI) at ISET Zaghouan, Tunisia.",
++    title: "Étudiante en informatique",
++    text: "3e année de la Licence en Technologie de l'Informatique (DSI) à l'ISET Zaghouan, en Tunisie.",
+   },
+   {
+     icon: Code2,
+-    title: "Full-stack in practice",
+-    text: "Spring Boot and Angular during my SIGA internship; Laravel, React and Next.js in my personal projects.",
++    title: "Du backend au frontend",
++    text: "Spring Boot et Angular pendant mon stage chez SIGA ; Laravel, React et Next.js dans mes projets personnels.",
+   },
+   {
+     icon: Cpu,
+-    title: "AI & security curiosity",
+-    text: "NVIDIA Fundamentals of Deep Learning certificate, and an active member of the SecuriNets cybersecurity club.",
++    title: "IA et cybersécurité",
++    text: "Certificat NVIDIA Fundamentals of Deep Learning, et membre actif du club de cybersécurité SecuriNets.",
+   },
+   {
+     icon: Sparkles,
+-    title: "Team & community",
+-    text: "Webmaster of the IEEE club at ISET Zaghouan, and IEEE Student Member. I enjoy contributing to concrete projects in a team.",
++    title: "Vie associative",
++    text: "Webmaster du club IEEE de l'ISET Zaghouan et membre étudiant IEEE. J'aime contribuer à des projets concrets en équipe.",
+   },
+ ];
+ 
+@@ -32,9 +32,9 @@ export default function About() {
+     <section id="about" className="relative px-6 py-28">
+       <div className="mx-auto max-w-6xl">
+         <SectionHeading
+-          eyebrow="01 · About"
+-          title="A student developer who builds."
+-          description="Looking for a PFE internship (2026/2027) in full-stack software development, where I can contribute to real projects as part of a team."
++          eyebrow="01 · À propos"
++          title="Étudiante développeuse."
++          description="Je cherche un stage de PFE (2026/2027) en développement full-stack, pour contribuer à des projets concrets au sein d'une équipe."
+         />
+ 
+         <div className="mt-16 grid gap-5 sm:grid-cols-2">
+diff --git a/components/sections/ArchitectureDiagram.tsx b/components/sections/ArchitectureDiagram.tsx
+index cae9a09..9f870ac 100644
+--- a/components/sections/ArchitectureDiagram.tsx
++++ b/components/sections/ArchitectureDiagram.tsx
+@@ -19,7 +19,7 @@ export default function ArchitectureDiagram() {
+   return (
+     <div className="relative w-full max-w-md rounded-2xl border border-border-subtle bg-bg-elevated/60 p-5 backdrop-blur-xl">
+       <div className="mb-4 flex items-center justify-between">
+-        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-muted">Live architecture</span>
++        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-muted">Architecture</span>
+         <span className="flex h-1.5 w-1.5 animate-pulse-slow rounded-full bg-cyan" />
+       </div>
+ 
+@@ -81,7 +81,7 @@ export default function ArchitectureDiagram() {
+           <button
+             key={s.name}
+             onClick={() => setIndex(i)}
+-            aria-label={`Show ${s.name} architecture`}
++            aria-label={`Afficher l'architecture de ${s.name}`}
+             className={`h-1 flex-1 rounded-full transition-colors ${i === index ? "bg-violet-soft" : "bg-border-subtle"}`}
+           />
+         ))}
+diff --git a/components/sections/Certifications.tsx b/components/sections/Certifications.tsx
+index 09a7bbd..3bf866c 100644
+--- a/components/sections/Certifications.tsx
++++ b/components/sections/Certifications.tsx
+@@ -11,8 +11,8 @@ export default function Certifications() {
+       <div className="mx-auto max-w-6xl">
+         <SectionHeading
+           eyebrow="05 · Certifications"
+-          title="Certifications & involvement."
+-          description="Certificates earned and student-club commitments."
++          title="Certifications et engagements."
++          description="Certificats obtenus et clubs étudiants."
+         />
+ 
+         <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+diff --git a/components/sections/Contact.tsx b/components/sections/Contact.tsx
+index 93f36bc..a12e446 100644
+--- a/components/sections/Contact.tsx
++++ b/components/sections/Contact.tsx
+@@ -24,14 +24,14 @@ export default function Contact() {
+   return (
+     <section id="contact" className="relative px-6 py-28">
+       <div className="mx-auto max-w-6xl">
+-        <SectionHeading eyebrow="07 · Contact" title="Let's build something real." align="center" />
++        <SectionHeading eyebrow="07 · Contact" title="Me contacter." align="center" />
+ 
+         <div className="mx-auto mt-14 grid max-w-4xl gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+           <div className="flex flex-col gap-4">
+             {[
+               { icon: Mail, label: "Email", value: socials.email, href: `mailto:${socials.email}` },
+               ...(socials.linkedin
+-                ? [{ icon: LinkedinIcon, label: "LinkedIn", value: "LinkedIn profile", href: socials.linkedin }]
++                ? [{ icon: LinkedinIcon, label: "LinkedIn", value: "Profil LinkedIn", href: socials.linkedin }]
+                 : []),
+               { icon: GithubIcon, label: "GitHub", value: `/${socials.githubUser}`, href: socials.github },
+             ].map((c, i) => (
+@@ -68,8 +68,8 @@ export default function Contact() {
+             {opened ? (
+               <div className="flex h-full min-h-[280px] flex-col items-center justify-center gap-3 text-center">
+                 <CheckCircle2 className="text-cyan" size={36} />
+-                <p className="font-display text-lg text-ink">Your email app should open.</p>
+-                <p className="text-sm text-ink-muted">If nothing opens, write to me directly at the address on the left.</p>
++                <p className="font-display text-lg text-ink">Votre application mail devrait s&apos;ouvrir.</p>
++                <p className="text-sm text-ink-muted">Sinon, écrivez-moi directement à l&apos;adresse indiquée à gauche.</p>
+               </div>
+             ) : (
+               <div className="grid gap-4">
+@@ -77,32 +77,32 @@ export default function Contact() {
+                   <input
+                     required
+                     name="name"
+-                    placeholder="Your name"
++                    placeholder="Votre nom"
+                     className="glass rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
+                   />
+                   <input
+                     required
+                     type="email"
+                     name="email"
+-                    placeholder="Your email"
++                    placeholder="Votre email"
+                     className="glass rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
+                   />
+                 </div>
+                 <input
+                   required
+                   name="subject"
+-                  placeholder="Subject"
++                  placeholder="Objet"
+                   className="glass rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
+                 />
+                 <textarea
+                   required
+                   name="message"
+                   rows={5}
+-                  placeholder="Tell me about the opportunity…"
++                  placeholder="Votre message…"
+                   className="glass resize-none rounded-xl px-4 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-violet-soft"
+                 />
+                 <MagneticButton className="justify-center bg-ink text-bg hover:opacity-90">
+-                  Write me an email <Send size={14} />
++                  M&apos;écrire par email <Send size={14} />
+                 </MagneticButton>
+               </div>
+             )}
+diff --git a/components/sections/Experience.tsx b/components/sections/Experience.tsx
+index 146d611..afd8294 100644
+--- a/components/sections/Experience.tsx
++++ b/components/sections/Experience.tsx
+@@ -9,9 +9,9 @@ export default function Experience() {
+     <section id="experience" className="relative px-6 py-28">
+       <div className="mx-auto max-w-6xl">
+         <SectionHeading
+-          eyebrow="04 · Experience"
+-          title="Internships, projects, studies."
+-          description="A timeline of my internships and personal projects."
++          eyebrow="04 · Parcours"
++          title="Stages, projets et études."
++          description="Mes stages, mes projets personnels et ma formation."
+         />
+ 
+         <ol className="relative mt-16 border-l border-border-subtle pl-8 md:pl-10">
+diff --git a/components/sections/GitHubSection.tsx b/components/sections/GitHubSection.tsx
+index 089aef9..4f780e6 100644
+--- a/components/sections/GitHubSection.tsx
++++ b/components/sections/GitHubSection.tsx
+@@ -15,8 +15,8 @@ export default function GitHubSection({ repos }: { repos: GithubRepo[] | null })
+       <div className="mx-auto max-w-6xl">
+         <SectionHeading
+           eyebrow="06 · GitHub"
+-          title="Code, in the open."
+-          description="Live data from my public GitHub repositories."
++          title="Mon code sur GitHub."
++          description="Mes dépôts publics, récupérés directement depuis GitHub."
+         />
+ 
+         <div className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+@@ -37,7 +37,7 @@ export default function GitHubSection({ repos }: { repos: GithubRepo[] | null })
+                 <h3 className="font-display text-lg text-ink">{r.name}</h3>
+                 <ArrowUpRight size={16} className="shrink-0 text-ink-muted transition-colors group-hover:text-violet-soft" />
+               </div>
+-              <p className="mt-2 min-h-10 text-sm text-ink-muted">{r.description ?? "No description yet."}</p>
++              <p className="mt-2 min-h-10 text-sm text-ink-muted">{r.description ?? "Pas encore de description."}</p>
+               <div className="mt-4 flex items-center gap-4 font-mono text-xs text-ink-muted">
+                 {r.language && <span className="text-cyan">{r.language}</span>}
+                 {r.stars > 0 && (
+@@ -62,7 +62,7 @@ export default function GitHubSection({ repos }: { repos: GithubRepo[] | null })
+             <GithubIcon size={26} className="text-violet-soft" />
+             <span className="font-display text-base text-ink">@{socials.githubUser}</span>
+             <span className="font-mono text-xs text-ink-muted">
+-              {repos ? "View all repositories →" : "Open my GitHub profile →"}
++              {repos ? "Voir tous les dépôts →" : "Ouvrir mon profil GitHub →"}
+             </span>
+           </motion.a>
+         </div>
+diff --git a/components/sections/Hero.tsx b/components/sections/Hero.tsx
+index 0cef6c5..d1c695e 100644
+--- a/components/sections/Hero.tsx
++++ b/components/sections/Hero.tsx
+@@ -28,7 +28,7 @@ export default function Hero() {
+     my.set((e.clientY - rect.top) / rect.height);
+   };
+ 
+-  const title = "Building modern digital experiences with code.".split(" ");
++  const title = "Étudiante en informatique, je développe des applications web full-stack.".split(" ");
+ 
+   return (
+     <section
+@@ -59,7 +59,7 @@ export default function Hero() {
+             className="glass mb-7 inline-flex items-center gap-2 rounded-full px-4 py-1.5 font-mono text-xs text-ink-muted"
+           >
+             <span className="h-1.5 w-1.5 animate-pulse-slow rounded-full bg-amber" />
+-            Looking for a PFE internship — 2026/2027
++            Recherche un stage de PFE — 2026/2027
+           </motion.div>
+ 
+           <h1 className="font-display text-4xl font-medium leading-[1.08] text-ink sm:text-5xl md:text-6xl lg:text-[4rem]">
+@@ -69,7 +69,7 @@ export default function Hero() {
+                 initial={{ opacity: 0, y: 24, filter: "blur(6px)" }}
+                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+                 transition={{ duration: 0.6, delay: 0.15 + i * 0.06 }}
+-                className={`inline-block ${["modern", "code."].includes(word) ? "text-gradient" : ""}`}
++                className={`inline-block ${["full-stack."].includes(word) ? "text-gradient" : ""}`}
+               >
+                 {word}&nbsp;
+               </motion.span>
+@@ -82,9 +82,9 @@ export default function Hero() {
+             transition={{ duration: 0.6, delay: 0.7 }}
+             className="mt-6 max-w-xl text-base text-ink-muted md:text-lg"
+           >
+-            I&apos;m <span className="text-ink">Wiem Arfaoui</span>, a third-year Computer Science student at
+-            ISET Zaghouan. I built a Spring Boot and Angular application during my internship at SIGA,
+-            and I&apos;m developing Minassa, an education platform, with Next.js and Laravel.
++            Je m&apos;appelle <span className="text-ink">Wiem Arfaoui</span>, en 3e année de licence à l&apos;ISET
++            Zaghouan. J&apos;ai participé au développement d&apos;une application de gestion pendant mon stage chez
++            SIGA (Spring Boot, Angular) et je développe deux projets personnels : Minassa et SmartDent.
+           </motion.p>
+ 
+           <motion.div
+@@ -94,15 +94,15 @@ export default function Hero() {
+             className="mt-8 flex flex-wrap items-center gap-3"
+           >
+             <MagneticButton href="#projects" className="bg-ink text-bg hover:opacity-90">
+-              View Projects <ArrowUpRight size={15} />
++              Voir les projets <ArrowUpRight size={15} />
+             </MagneticButton>
+             {socials.cv && (
+               <MagneticButton href={socials.cv} target="_blank" className="glass text-ink hover:bg-white/5">
+-                <FileDown size={15} /> Download CV
++                <FileDown size={15} /> Télécharger le CV
+               </MagneticButton>
+             )}
+             <MagneticButton href="#contact" className="text-ink hover:text-violet-soft">
+-              <Mail size={15} /> Contact Me
++              <Mail size={15} /> Me contacter
+             </MagneticButton>
+           </motion.div>
+ 
+@@ -138,9 +138,9 @@ export default function Hero() {
+         animate={{ y: [0, 8, 0] }}
+         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+         className="absolute bottom-8 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-ink-muted"
+-        aria-label="Scroll to about section"
++        aria-label="Aller à la section À propos"
+       >
+-        <span className="font-mono text-[10px] uppercase tracking-widest">Scroll</span>
++        <span className="font-mono text-[10px] uppercase tracking-widest">Défiler</span>
+         <ArrowDown size={14} />
+       </motion.a>
+     </section>
+diff --git a/components/sections/Projects.tsx b/components/sections/Projects.tsx
+index 5b2d054..f771432 100644
+--- a/components/sections/Projects.tsx
++++ b/components/sections/Projects.tsx
+@@ -1,50 +1,20 @@
+ "use client";
+ 
+-import { useMemo, useState } from "react";
+ import SectionHeading from "@/components/ui/SectionHeading";
+ import ProjectCard from "@/components/projects/ProjectCard";
+ import { projects } from "@/data/projects";
+ 
+ export default function Projects() {
+-  const [filter, setFilter] = useState("All");
+-
+-  const filters = useMemo(() => {
+-    const counts = new Map<string, number>();
+-    projects.forEach((p) => p.technologies.forEach((t) => counts.set(t, (counts.get(t) ?? 0) + 1)));
+-    const shared = [...counts.entries()].filter(([, n]) => n > 1).sort((x, y) => y[1] - x[1]).map(([t]) => t);
+-    return ["All", ...shared];
+-  }, []);
+-
+-  const filtered = filter === "All" ? projects : projects.filter((p) => p.technologies.includes(filter));
+-
+   return (
+     <section id="projects" className="relative px-6 py-28">
+       <div className="mx-auto max-w-6xl">
+-        <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
+-          <SectionHeading
+-            eyebrow="03 · Selected Work"
+-            title="Projects, with their real status."
+-            description="Personal projects built on Laravel, React and Next.js, plus a security-pipeline lab. Each card shows its real status."
+-          />
+-        </div>
+-
+-        <div className="mt-10 flex flex-wrap gap-2">
+-          {filters.map((f) => (
+-            <button
+-              key={f}
+-              onClick={() => setFilter(f)}
+-              data-cursor="pointer"
+-              className={`rounded-full px-4 py-2 font-mono text-xs transition-all ${
+-                filter === f ? "bg-ink text-bg" : "glass text-ink-muted hover:text-ink"
+-              }`}
+-            >
+-              {f}
+-            </button>
+-          ))}
+-        </div>
+-
+-        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+-          {filtered.map((project, i) => (
++        <SectionHeading
++          eyebrow="03 · Projets"
++          title="Mes projets et mon stage."
++          description="Deux projets personnels et mon stage chez SIGA. Chaque fiche indique ce qui est réalisé, ma contribution et l'état actuel."
++        />
++        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
++          {projects.map((project, i) => (
+             <ProjectCard key={project.slug} project={project} index={i} />
+           ))}
+         </div>
+diff --git a/components/sections/Skills.tsx b/components/sections/Skills.tsx
+index 42208f3..38a150e 100644
+--- a/components/sections/Skills.tsx
++++ b/components/sections/Skills.tsx
+@@ -13,9 +13,9 @@ export default function Skills() {
+     <section id="skills" className="relative px-6 py-28">
+       <div className="mx-auto max-w-6xl">
+         <SectionHeading
+-          eyebrow="02 · Skills"
+-          title="What I work with, and where."
+-          description="Each skill shows where I actually used it: internship or personal project."
++          eyebrow="02 · Compétences"
++          title="Ce que j'utilise, et où."
++          description="Pour chaque compétence, j'indique où je l'ai utilisée : stage ou projet personnel."
+         />
+ 
+         <div className="mt-12 flex flex-wrap gap-2">
+diff --git a/components/ui/BackToTop.tsx b/components/ui/BackToTop.tsx
+index 9556bfa..d278de7 100644
+--- a/components/ui/BackToTop.tsx
++++ b/components/ui/BackToTop.tsx
+@@ -25,7 +25,7 @@ export default function BackToTop() {
+           whileTap={{ scale: 0.92 }}
+           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+           className="glass fixed bottom-6 right-6 z-50 flex h-11 w-11 items-center justify-center rounded-full text-ink shadow-lg md:bottom-8 md:right-8"
+-          aria-label="Back to top"
++          aria-label="Retour en haut"
+         >
+           <ArrowUp size={18} />
+         </motion.button>
+diff --git a/components/ui/CommandPalette.tsx b/components/ui/CommandPalette.tsx
+index ece11fc..2b21178 100644
+--- a/components/ui/CommandPalette.tsx
++++ b/components/ui/CommandPalette.tsx
+@@ -50,15 +50,15 @@ export default function CommandPalette() {
+   const items: CommandItem[] = [
+     ...navLinks.map((n) => ({
+       id: n.href,
+-      label: `Go to ${n.label}`,
++      label: `Aller à ${n.label}`,
+       hint: "Section",
+       icon: <ArrowRight size={14} />,
+       action: () => go(n.href),
+     })),
+     {
+       id: "theme",
+-      label: theme === "dark" ? "Switch to light mode" : "Switch to dark mode",
+-      hint: "Preference",
++      label: theme === "dark" ? "Passer en mode clair" : "Passer en mode sombre",
++      hint: "Préférence",
+       icon: theme === "dark" ? <Sun size={14} /> : <Moon size={14} />,
+       action: () => {
+         toggleTheme();
+@@ -67,7 +67,7 @@ export default function CommandPalette() {
+     },
+     {
+       id: "email",
+-      label: `Copy email — ${socials.email}`,
++      label: `Copier l'email — ${socials.email}`,
+       hint: "Contact",
+       icon: <Mail size={14} />,
+       action: () => {
+@@ -77,7 +77,7 @@ export default function CommandPalette() {
+     },
+     {
+       id: "github",
+-      label: "Open GitHub profile",
++      label: "Ouvrir mon profil GitHub",
+       hint: "Link",
+       icon: <GithubIcon size={14} />,
+       action: () => window.open(socials.github, "_blank"),
+@@ -86,7 +86,7 @@ export default function CommandPalette() {
+       ? [
+           {
+             id: "linkedin",
+-            label: "Open LinkedIn profile",
++            label: "Ouvrir mon profil LinkedIn",
+             hint: "Link",
+             icon: <LinkedinIcon size={14} />,
+             action: () => window.open(socials.linkedin, "_blank"),
+@@ -97,7 +97,7 @@ export default function CommandPalette() {
+       ? [
+           {
+             id: "cv",
+-            label: "Download CV",
++            label: "Télécharger le CV",
+             hint: "Resume",
+             icon: <FileText size={14} />,
+             action: () => window.open(socials.cv, "_blank"),
+@@ -132,7 +132,7 @@ export default function CommandPalette() {
+                 autoFocus
+                 value={query}
+                 onChange={(e) => setQuery(e.target.value)}
+-                placeholder="Type a command or search…"
++                placeholder="Taper une commande ou rechercher…"
+                 className="w-full bg-transparent text-sm text-ink placeholder:text-ink-muted focus:outline-none"
+               />
+               <kbd className="rounded border border-border-subtle px-1.5 py-0.5 font-mono text-[10px] text-ink-muted">
+@@ -141,7 +141,7 @@ export default function CommandPalette() {
+             </div>
+             <div className="max-h-80 overflow-y-auto p-2">
+               {filtered.length === 0 && (
+-                <p className="px-3 py-6 text-center text-sm text-ink-muted">No results found.</p>
++                <p className="px-3 py-6 text-center text-sm text-ink-muted">Aucun résultat.</p>
+               )}
+               {filtered.map((item) => (
+                 <button
+diff --git a/components/ui/Loader.tsx b/components/ui/Loader.tsx
+index a4ae055..5378265 100644
+--- a/components/ui/Loader.tsx
++++ b/components/ui/Loader.tsx
+@@ -57,7 +57,7 @@ export default function Loader() {
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ duration: 0.6, delay: 0.1 }}
+             >
+-              booting systems<span className="text-violet">.</span>
++              Portfolio<span className="text-violet">.</span>
+             </motion.h1>
+             <div className="h-px w-64 overflow-hidden bg-border-subtle">
+               <motion.div
+diff --git a/components/ui/ThemeToggle.tsx b/components/ui/ThemeToggle.tsx
+index 8c22ed6..0e74ac0 100644
+--- a/components/ui/ThemeToggle.tsx
++++ b/components/ui/ThemeToggle.tsx
+@@ -10,7 +10,7 @@ export default function ThemeToggle() {
+     <button
+       data-cursor="pointer"
+       onClick={toggleTheme}
+-      aria-label="Toggle theme"
++      aria-label="Changer de thème"
+       className="glass flex h-9 w-9 items-center justify-center rounded-full text-ink transition-transform hover:scale-105 active:scale-95"
+     >
+       {theme === "dark" ? <Sun size={16} /> : <Moon size={16} />}
+diff --git a/data/certifications.ts b/data/certifications.ts
+index c749540..aa8b8d8 100644
+--- a/data/certifications.ts
++++ b/data/certifications.ts
+@@ -1,49 +1,15 @@
+ import { Certification } from "@/types";
+ 
+ export const certifications: Certification[] = [
+-  {
+-    title: "Fundamentals of Deep Learning",
+-    issuer: "NVIDIA",
+-    date: "29 March 2026",
+-    detail: "Certificate of Competency",
+-  },
+-  {
+-    title: "Automation Testing with Selenium",
+-    issuer: "MIT Polytech",
+-  },
+-  {
+-    title: "IEEE Student Member",
+-    issuer: "IEEE · Tunisia Section",
+-    date: "2026",
+-    detail: "Membership valid through December 2026",
+-  },
+-  {
+-    title: "Job Fair 2026",
+-    issuer: "Centre 4C · ISET Zaghouan",
+-    date: "6 May 2026",
+-    detail: "Certificate of participation",
+-  },
+-  {
+-    title: "Journée Entrepreneuriat",
+-    issuer: "Centre 4C · ISET Zaghouan",
+-    date: "11 May 2026",
+-    detail: "Certificate of participation",
+-  },
+-  {
+-    title: "Workshops BMC & BLC",
+-    issuer: "Centre 4C · ISET Zaghouan",
+-    date: "11 May 2026",
+-    detail: "Business Model Canvas & Business Lean Canvas",
+-  },
++  { title: "Fundamentals of Deep Learning", issuer: "NVIDIA", date: "29 mars 2026", detail: "Certificate of Competency" },
++  { title: "Automation Testing with Selenium", issuer: "MIT Polytech" },
++  { title: "Membre étudiant IEEE", issuer: "IEEE · Section Tunisie", date: "2026", detail: "Adhésion valable jusqu'en décembre 2026" },
++  { title: "Job Fair 2026", issuer: "Centre 4C · ISET Zaghouan", date: "6 mai 2026", detail: "Attestation de participation" },
++  { title: "Journée Entrepreneuriat", issuer: "Centre 4C · ISET Zaghouan", date: "11 mai 2026", detail: "Attestation de participation" },
++  { title: "Workshops BMC & BLC", issuer: "Centre 4C · ISET Zaghouan", date: "11 mai 2026", detail: "Business Model Canvas et Business Lean Canvas" },
+ ];
+ 
+ export const engagements = [
+-  {
+-    title: "Webmaster — IEEE Club, ISET Zaghouan",
+-    detail: "Visual content (Canva), communication and technology events.",
+-  },
+-  {
+-    title: "Active member — SecuriNets Club, ISET Zaghouan",
+-    detail: "Hands-on workshops and cybersecurity projects.",
+-  },
++  { title: "Webmaster — Club IEEE, ISET Zaghouan", detail: "Contenus visuels (Canva), communication et événements technologiques." },
++  { title: "Membre actif — Club SecuriNets, ISET Zaghouan", detail: "Ateliers pratiques et projets en cybersécurité." },
+ ];
+diff --git a/data/experience.ts b/data/experience.ts
+index 7ce0d12..bf01dd3 100644
+--- a/data/experience.ts
++++ b/data/experience.ts
+@@ -1,57 +1,10 @@
+ import { TimelineItem } from "@/types";
+ 
+ export const experience: TimelineItem[] = [
+-  {
+-    date: "06/2024",
+-    title: "Baccalauréat Sciences",
+-    place: "Lycée Ibn Charaf, Nadhour, Zaghouan",
+-    description: "Scientific baccalaureate, the starting point of my Computer Science path.",
+-    tags: ["Education"],
+-    kind: "education",
+-  },
+-  {
+-    date: "01/2025 – 02/2025",
+-    title: "IT Intern",
+-    place: "Tunisie Télécom · Zaghouan",
+-    description:
+-      "Information-system support and handling of requests, document management and use of network tools.",
+-    tags: ["IS support", "Network tools"],
+-    kind: "work",
+-  },
+-  {
+-    date: "07/2025 – 08/2025",
+-    title: "IT Intern",
+-    place: "Tunisie Télécom · Nadhour, Zaghouan",
+-    description:
+-      "Customer reception, cash desk, services and payments, using the company's digital tools.",
+-    tags: ["Customer service", "Digital tools"],
+-    kind: "work",
+-  },
+-  {
+-    date: "01/2026 – 02/2026",
+-    title: "Software Development Intern",
+-    place: "SIGA — Système Informatique et Gestion Automatisée · Les Berges du Lac",
+-    description:
+-      "Took part in building a mission and user management application: Spring Boot backend, Angular web front end, components communicating through REST APIs.",
+-    tags: ["Java", "Spring Boot", "Angular", "REST API"],
+-    kind: "work",
+-  },
+-  {
+-    date: "2026",
+-    title: "Minassa & SmartDent",
+-    place: "Personal projects",
+-    description:
+-      "Minassa, an education platform for Tunisian baccalaureate students (Next.js + Laravel + MySQL), and SmartDent, a dental-clinic management app whose foundations are in place.",
+-    tags: ["Next.js", "Laravel", "React", "MySQL"],
+-    kind: "project",
+-  },
+-  {
+-    date: "2025 / 2026",
+-    title: "Licence en Technologie de l'Informatique — DSI",
+-    place: "ISET Zaghouan · 3rd year",
+-    description:
+-      "Final year of the bachelor's degree. Looking for a PFE (final-year project) internship for 2026/2027 in full-stack software development.",
+-    tags: ["Education", "PFE 2026/2027"],
+-    kind: "education",
+-  },
++  { date: "06/2024", title: "Baccalauréat Sciences", place: "Lycée Ibn Charaf, Nadhour, Zaghouan", description: "Obtention du baccalauréat scientifique, point de départ de mon parcours en informatique.", tags: ["Formation"], kind: "education" },
++  { date: "01/2025 – 02/2025", title: "Stagiaire en informatique", place: "Tunisie Télécom · Zaghouan", description: "Support du système d'information, traitement des demandes, gestion documentaire et utilisation d'outils réseau.", tags: ["Support SI", "Outils réseau"], kind: "work" },
++  { date: "07/2025 – 08/2025", title: "Stagiaire en informatique", place: "Tunisie Télécom · Nadhour, Zaghouan", description: "Accueil des clients, gestion de caisse, services et paiements, avec des outils numériques.", tags: ["Relation client", "Outils numériques"], kind: "work" },
++  { date: "01/2026 – 02/2026", title: "Stagiaire en développement informatique", place: "SIGA — Système Informatique et Gestion Automatisée · Les Berges du Lac", description: "Participation au développement d'une application de gestion des missions et des utilisateurs : backend Spring Boot, application web Angular, échanges par API REST.", tags: ["Java", "Spring Boot", "Angular", "API REST"], kind: "work" },
++  { date: "Parallèlement aux études", title: "Projets personnels : Minassa et SmartDent", place: "Projets personnels", description: "Minassa, une plateforme de révision pour le baccalauréat (Next.js, Laravel, MySQL), et SmartDent, une application de gestion de cabinet dentaire (Laravel, React, MySQL).", tags: ["Next.js", "Laravel", "React", "MySQL"], kind: "project" },
++  { date: "2025 / 2026", title: "Licence en Technologie de l'Informatique — DSI", place: "ISET Zaghouan · 3e année", description: "Dernière année de licence. Je cherche un stage de PFE pour 2026/2027 en développement full-stack.", tags: ["Formation", "PFE 2026/2027"], kind: "education" },
+ ];
+diff --git a/data/nav.ts b/data/nav.ts
+index 0da20b8..8801237 100644
+--- a/data/nav.ts
++++ b/data/nav.ts
+@@ -1,10 +1,10 @@
+ import { NavLink } from "@/types";
+ 
+ export const navLinks: NavLink[] = [
+-  { label: "About", href: "#about" },
+-  { label: "Skills", href: "#skills" },
+-  { label: "Projects", href: "#projects" },
+-  { label: "Experience", href: "#experience" },
++  { label: "À propos", href: "#about" },
++  { label: "Compétences", href: "#skills" },
++  { label: "Projets", href: "#projects" },
++  { label: "Parcours", href: "#experience" },
+   { label: "Certifications", href: "#certifications" },
+   { label: "GitHub", href: "#github" },
+   { label: "Contact", href: "#contact" },
+diff --git a/data/projects.ts b/data/projects.ts
+index 4484f4e..98620e6 100644
+--- a/data/projects.ts
++++ b/data/projects.ts
+@@ -3,98 +3,132 @@ import { Project } from "@/types";
+ export const projects: Project[] = [
+   {
+     slug: "minasa",
++    kind: "Projet personnel",
+     flagship: true,
+     name: "Minassa",
+-    tagline: "Web education platform for Tunisian baccalaureate students",
+-    description:
+-      "Minassa is a web education platform aimed at baccalaureate students in Tunisia. It is designed to bring courses, exercises, quizzes and gamification together in one modern learning experience, with dedicated spaces for students, teachers and administrators.",
+-    status: "In progress",
++    tagline: "Plateforme web pour aider les élèves tunisiens à réviser et à préparer le baccalauréat.",
++    objective:
++      "Regrouper sur une seule plateforme web de quoi réviser le baccalauréat : cours, exercices et quiz, avec une approche ludique pour encourager la régularité.",
+     architecture: [
+-      { label: "Next.js Frontend", detail: "User interface built with Next.js and React" },
+-      { label: "Laravel REST API", detail: "Backend with authentication and role management (Sanctum)" },
+-      { label: "MySQL Database", detail: "Relational storage for users, content and progression" },
++      { label: "Next.js", detail: "Interface web" },
++      { label: "API Laravel", detail: "Backend" },
++      { label: "MySQL", detail: "Base de données" },
+     ],
+-    featuresLabel: "Product scope",
+-    features: [
+-      "Authentication & role management",
+-      "Student, teacher and admin dashboards",
+-      "Sections, subjects and chapters",
+-      "Learning resources: videos and documents",
+-      "Exercises with corrections",
+-      "Interactive quizzes",
+-      "Student progression",
+-      "XP system, gamification and rankings",
+-      "User profiles",
++    achievedLabel: "Ce qui est développé",
++    achieved: [
++      "Interface web réalisée avec Next.js",
++      "Backend Laravel qui expose une API utilisée par l'interface",
++      "Données organisées dans une base MySQL",
+     ],
+-    technologies: ["Next.js", "React", "Laravel", "PHP", "MySQL", "Laravel Sanctum", "Tailwind CSS"],
+-    progress: [
+-      "Interface developed with Next.js",
+-      "Backend developed with Laravel",
+-      "Frontend and backend communicate through a REST API",
+-      "Data organised in a MySQL database",
++    planned: [
++      "Espaces élève, enseignant et administrateur",
++      "Cours organisés par section, matière et chapitre (vidéos et documents)",
++      "Exercices avec corrections et quiz interactifs",
++      "Suivi de progression, points d'expérience et classements",
+     ],
+-    github: "https://github.com/wiem-arfaoui9",
++    technologies: ["Next.js", "Laravel", "PHP", "MySQL", "API REST"],
++    role: "Développement de l'interface et du backend, en projet personnel.",
++    contribution: [
++      "Interface développée avec Next.js",
++      "Backend développé avec Laravel",
++      "Communication entre l'interface et le backend par API",
++      "Organisation des données dans MySQL",
++    ],
++    status: {
++      label: "En cours",
++      detail:
++        "Le projet est en développement. Les fonctionnalités de la liste « Objectifs » sont visées : elles ne sont pas présentées comme terminées.",
++    },
+     accent: "violet",
+-    role: "Full-stack developer (personal project)",
+   },
+   {
+     slug: "smartdent",
++    kind: "Projet personnel",
+     name: "SmartDent",
+-    tagline: "Management application for a dental clinic",
+-    description:
+-      "SmartDent is a management application for a dental clinic, built with Laravel and React. The project foundations are in place; the functional modules below are planned next.",
+-    status: "Early stage",
++    tagline: "Application web de gestion d'un cabinet dentaire : patients, rendez-vous, dossiers, paiements.",
++    objective:
++      "Centraliser dans une application le travail quotidien d'un cabinet dentaire (accueil, soins, facturation, personnel), avec un accès adapté à chaque rôle : administrateur, dentiste, secrétaire et patient.",
+     architecture: [
+-      { label: "React Frontend", detail: "Component-based UI styled with Tailwind CSS" },
+-      { label: "Laravel API", detail: "REST API, authentication and roles" },
+-      { label: "MySQL Database", detail: "Patients, appointments and medical records" },
++      { label: "React + Vite", detail: "Interface web" },
++      { label: "API Laravel 11", detail: "Backend" },
++      { label: "MySQL", detail: "Base de données" },
++    ],
++    achievedLabel: "Fonctionnalités réalisées",
++    achieved: [
++      "Authentification et gestion des rôles (administrateur, dentiste, secrétaire, patient)",
++      "Gestion des patients et des rendez-vous, avec statuts et liste d'attente",
++      "Dossiers médicaux, réservés aux dentistes et aux administrateurs",
++      "Schéma dentaire interactif avec historique des modifications par dent",
++      "Paiements et statistiques mensuelles ; génération de PDF (reçus, ordonnances, export du dossier)",
++      "Tableau de bord : rendez-vous du jour, graphiques de rendez-vous et de revenus, taux d'occupation et d'absences",
++      "Messagerie interne et notifications",
++      "Gestion des employés, des plannings et des congés",
++      "Portail patient : réservation et annulation de rendez-vous, factures, dossier, schéma dentaire",
++      "Résumé de dossier assisté par IA (API Anthropic, identité retirée avant l'envoi), à utiliser avec une clé API configurée",
+     ],
+-    featuresLabel: "Planned features",
+-    features: [
+-      "Patient, appointment and medical record management",
+-      "Authentication and role management",
+-      "Dashboard and CRUD operations",
+-      "REST API",
++    technologies: ["Laravel 11", "PHP", "MySQL", "Laravel Sanctum", "Spatie Permission", "React 18", "Vite", "Tailwind CSS", "API REST"],
++    role: "Projet personnel que j'ai développé : base de données, API Laravel et interface React.",
++    contribution: [
++      "Modélisation de la base de données (migrations Laravel)",
++      "API REST avec accès limité selon le rôle de l'utilisateur",
++      "Interface React connectée à l'API (Axios, React Query)",
++      "Génération de documents PDF et intégration d'une API d'IA",
+     ],
+-    technologies: ["Laravel", "React", "MySQL", "Tailwind CSS"],
+-    progress: [
+-      "Project structure set up",
+-      "Code organisation defined",
+-      "Repository organisation started on GitLab (Git)",
++    skills: [
++      "Contrôle d'accès par rôles",
++      "Conception d'une API REST",
++      "Liaison entre une interface React et une API",
++      "Modélisation d'une base de données relationnelle",
+     ],
+-    github: "https://github.com/wiem-arfaoui9",
++    status: {
++      label: "Prototype fonctionnel",
++      detail:
++        "Projet personnel d'apprentissage, avec des données de démonstration. Il n'est pas présenté comme un produit en service dans un cabinet.",
++    },
++    github: "https://github.com/wiem-arfaoui9/SmartDent",
+     accent: "amber",
+-    role: "Full-stack developer (personal project)",
+   },
+   {
+-    slug: "devsecops-pipeline",
+-    name: "DevSecOps Security Pipeline",
+-    tagline: "Automated security testing with AI-assisted analysis",
+-    description:
+-      "A personal lab project exploring how security testing, vulnerability management and AI assistance can be wired into a CI/CD workflow. It follows my interest in cybersecurity, developed through the SecuriNets club.",
+-    status: "Personal lab",
++    slug: "siga",
++    kind: "Stage",
++    name: "SIGA",
++    tagline: "Stage de développement full-stack : application web de gestion des missions et des utilisateurs.",
++    context: "Stage de janvier à février 2026 · SIGA (Système Informatique et Gestion Automatisée), Les Berges du Lac",
++    objective:
++      "Permettre à un administrateur de confier des missions à des agents et de suivre leur avancement jusqu'à la validation.",
+     architecture: [
+-      { label: "GitLab CI/CD", detail: "Pipeline triggered on each change" },
+-      { label: "Security Tests", detail: "Automated security checks" },
+-      { label: "OWASP ZAP", detail: "Dynamic application security testing" },
+-      { label: "DefectDojo", detail: "Vulnerability management" },
+-      { label: "AI Analysis", detail: "AI-assisted analysis of findings" },
+-      { label: "Dashboard", detail: "Consolidated security view" },
++      { label: "Angular", detail: "Interface web" },
++      { label: "API Spring Boot", detail: "Backend" },
++      { label: "MySQL", detail: "Base de données" },
++    ],
++    achievedLabel: "Fonctionnalités de l'application",
++    achieved: [
++      "Connexion sécurisée avec des rôles Administrateur et Agent",
++      "Gestion des utilisateurs par l'administrateur",
++      "Création de missions avec date d'échéance, affectées à un agent",
++      "Parcours de validation : l'agent termine sa mission, l'administrateur la valide ou la renvoie à corriger",
++      "Tableau de bord de suivi des missions",
++    ],
++    technologies: ["Java", "Spring Boot", "Spring Security", "Angular", "MySQL", "API REST", "Git"],
++    role: "Stagiaire développeur, au sein d'un binôme de développement.",
++    contribution: [
++      "Backend : module des missions (entité, repository, service et contrôleur REST : création, modification, suppression, consultation par utilisateur), avec accès limité selon le rôle",
++      "Frontend Angular : écran de gestion des missions pour l'administrateur et écran « mes missions » pour l'agent",
++      "Service Angular de communication avec l'API et protection des pages réservées à l'administrateur",
++      "Travail en équipe avec Git et GitHub",
+     ],
+-    featuresLabel: "Project goals",
+-    features: [
+-      "Automated security scanning",
+-      "Vulnerability reports",
+-      "Security dashboard",
+-      "Docker environment",
+-      "CI/CD automation",
+-      "AI-assisted analysis",
++    skills: [
++      "Développement d'une API REST avec Spring Boot",
++      "Sécurisation des accès par rôle",
++      "Consommation d'une API depuis Angular",
++      "Collaboration sur un dépôt Git commun",
+     ],
+-    technologies: ["Python", "FastAPI", "Docker", "GitLab CI/CD", "OWASP ZAP", "DefectDojo"],
+-    progress: [],
+-    github: "https://github.com/wiem-arfaoui9",
++    status: {
++      label: "Stage terminé",
++      detail: "Stage effectué de janvier à février 2026. Le dépôt est partagé avec l'autre développeur du projet.",
++    },
++    github: "https://github.com/wiem-arfaoui9/Siga",
+     accent: "cyan",
+-    role: "Personal lab project",
+   },
+ ];
+ 
+diff --git a/data/skills.ts b/data/skills.ts
+index 94708b1..1b23623 100644
+--- a/data/skills.ts
++++ b/data/skills.ts
+@@ -1,30 +1,26 @@
+ import { Skill } from "@/types";
+ 
+ export const skills: Skill[] = [
+-  // Backend
+-  { name: "Java", category: "Backend", usedIn: "SIGA internship" },
+-  { name: "Spring Boot", category: "Backend", usedIn: "SIGA internship" },
++  { name: "Java", category: "Backend", usedIn: "Stage SIGA" },
++  { name: "Spring Boot", category: "Backend", usedIn: "Stage SIGA" },
+   { name: "PHP", category: "Backend", usedIn: "Minassa, SmartDent" },
+   { name: "Laravel", category: "Backend", usedIn: "Minassa, SmartDent" },
+   { name: "Python", category: "Backend" },
+-  // Frontend
+-  { name: "Angular", category: "Frontend", usedIn: "SIGA internship" },
++  { name: "Angular", category: "Frontend", usedIn: "Stage SIGA" },
+   { name: "React", category: "Frontend", usedIn: "SmartDent" },
+-  { name: "Next.js", category: "Frontend", usedIn: "Minassa, this portfolio" },
+-  { name: "JavaScript", category: "Frontend", usedIn: "All web projects" },
+-  { name: "HTML", category: "Frontend", usedIn: "All web projects" },
+-  { name: "CSS", category: "Frontend", usedIn: "All web projects" },
+-  // API
+-  { name: "REST API", category: "API", usedIn: "SIGA, Minassa" },
+-  // Databases
+-  { name: "SQL", category: "Databases" },
+-  { name: "PL/SQL", category: "Databases" },
+-  { name: "MySQL", category: "Databases", usedIn: "Minassa, SmartDent" },
+-  { name: "Database design", category: "Databases", usedIn: "Minassa" },
+-  // Tools
+-  { name: "Git", category: "Tools", usedIn: "All projects" },
+-  { name: "GitHub", category: "Tools" },
+-  { name: "GitLab", category: "Tools", usedIn: "SmartDent repository" },
++  { name: "Next.js", category: "Frontend", usedIn: "Minassa, ce portfolio" },
++  { name: "Tailwind CSS", category: "Frontend", usedIn: "SmartDent, ce portfolio" },
++  { name: "JavaScript", category: "Frontend", usedIn: "Tous mes projets web" },
++  { name: "HTML", category: "Frontend", usedIn: "Tous mes projets web" },
++  { name: "CSS", category: "Frontend", usedIn: "Tous mes projets web" },
++  { name: "API REST", category: "API", usedIn: "SIGA, Minassa, SmartDent" },
++  { name: "SQL", category: "Bases de données" },
++  { name: "PL/SQL", category: "Bases de données" },
++  { name: "MySQL", category: "Bases de données", usedIn: "SIGA, Minassa, SmartDent" },
++  { name: "Conception de bases de données", category: "Bases de données", usedIn: "SmartDent" },
++  { name: "Git", category: "Outils", usedIn: "Tous mes projets" },
++  { name: "GitHub", category: "Outils" },
++  { name: "GitLab", category: "Outils" },
+ ];
+ 
+-export const skillCategories = ["Backend", "Frontend", "API", "Databases", "Tools"] as const;
++export const skillCategories = ["Backend", "Frontend", "API", "Bases de données", "Outils"] as const;
+diff --git a/types/index.ts b/types/index.ts
+index 7b4f987..371b832 100644
+--- a/types/index.ts
++++ b/types/index.ts
+@@ -1,4 +1,4 @@
+-export type SkillCategory = "Backend" | "Frontend" | "API" | "Databases" | "Tools";
++export type SkillCategory = "Backend" | "Frontend" | "API" | "Bases de données" | "Outils";
+ 
+ export interface Skill {
+   name: string;
+@@ -12,26 +12,38 @@ export interface ArchitectureStep {
+   detail: string;
+ }
+ 
+-export type ProjectStatus = "In progress" | "Early stage" | "Personal lab";
++export type ProjectKind = "Projet personnel" | "Stage";
++
++export interface ProjectStatus {
++  /** Libellé court affiché en badge, ex. "Prototype fonctionnel". */
++  label: string;
++  detail: string;
++}
+ 
+ export interface Project {
+   slug: string;
++  kind: ProjectKind;
+   flagship?: boolean;
+   name: string;
++  /** Description courte affichée sur la carte. */
+   tagline: string;
+-  description: string;
+-  status: ProjectStatus;
++  /** Ligne de contexte, ex. entreprise et dates pour un stage. */
++  context?: string;
++  objective: string;
+   architecture: ArchitectureStep[];
+-  /** Label above the feature list, e.g. "Features" or "Planned features". */
+-  featuresLabel: string;
+-  features: string[];
++  /** Fonctionnalités existantes, vérifiées dans le code. */
++  achievedLabel: string;
++  achieved: string[];
++  /** Objectifs NON présentés comme terminés. */
++  planned?: string[];
+   technologies: string[];
+-  /** Honest "what is done so far" list. */
+-  progress: string[];
++  role: string;
++  contribution: string[];
++  skills?: string[];
++  status: ProjectStatus;
++  /** Renseigné uniquement si le dépôt existe et répond. */
+   github?: string;
+-  demo?: string;
+   accent: "violet" | "cyan" | "amber";
+-  role: string;
+ }
+ 
+ export interface TimelineItem {
+-- 
+2.43.0
+
