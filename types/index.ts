@@ -60,6 +60,8 @@ export interface Certification {
   issuer: string;
   date?: string;
   detail?: string;
+  /** Chemin du PDF du certificat dans /public (ouvert au clic). */
+  file?: string;
 }
 
 export interface NavLink {

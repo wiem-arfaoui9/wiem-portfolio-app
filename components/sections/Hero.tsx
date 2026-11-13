@@ -97,7 +97,7 @@ export default function Hero() {
               Voir les projets <ArrowUpRight size={15} />
             </MagneticButton>
             {socials.cv && (
-              <MagneticButton href={socials.cv} target="_blank" className="glass text-ink hover:bg-white/5">
+              <MagneticButton href={socials.cv} download="CV_Wiem_Arfaoui.pdf" className="glass text-ink hover:bg-white/5">
                 <FileDown size={15} /> Télécharger le CV
               </MagneticButton>
             )}

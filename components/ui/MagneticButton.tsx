@@ -10,9 +10,10 @@ interface MagneticButtonProps {
   onClick?: () => void;
   href?: string;
   target?: string;
+  download?: boolean | string;
 }
 
-export default function MagneticButton({ children, className, onClick, href, target }: MagneticButtonProps) {
+export default function MagneticButton({ children, className, onClick, href, target, download }: MagneticButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
 
@@ -46,6 +47,7 @@ export default function MagneticButton({ children, className, onClick, href, tar
           data-cursor="pointer"
           href={href}
           target={target}
+          download={download}
           onClick={onClick}
           whileTap={{ scale: 0.95 }}
           className={sharedClassName}

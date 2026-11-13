@@ -15,7 +15,7 @@ export const socials = {
   githubUser: "wiem-arfaoui9",
   github: "https://github.com/wiem-arfaoui9",
   /** Add a real LinkedIn URL here to display it everywhere; leave undefined to hide it. */
-  linkedin: undefined as string | undefined,
+  linkedin: "https://www.linkedin.com/in/wiem-arfaoui" as string | undefined,
   /** Put a CV in /public and set e.g. "/cv-wiem-arfaoui.pdf" to enable the download button. */
-  cv: undefined as string | undefined,
+  cv: "/cv-wiem-arfaoui.pdf" as string | undefined,
 };
